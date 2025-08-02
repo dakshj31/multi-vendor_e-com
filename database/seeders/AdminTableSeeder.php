@@ -20,7 +20,7 @@ class AdminTableSeeder extends Seeder
         $admin->role = 'admin';
         $admin->mobile = '8178745897';
         $admin->email = 'daksh@gmail.com';
-        $admin->password = '$password';
+        $admin->password = $password;
         $admin->status = 1;
         $admin->save();
     }

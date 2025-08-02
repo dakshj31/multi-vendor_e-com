@@ -56,6 +56,23 @@
     <!--end::Required Plugin(AdminLTE)-->
   </head>
   <!--end::Head-->
+  <script>
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('loginPassword');
+    const icon = document.getElementById('togglePasswordIcon');
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    } else {
+      passwordInput.type = 'password';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    }
+  }
+</script>
+
   <!--begin::Body-->
   <body class="login-page bg-body-secondary">
     <div class="login-box">
@@ -70,20 +87,32 @@
         </div>
         <div class="card-body login-card-body">
           <p class="login-box-msg">Sign in to start your session</p>
-          <form action="../index3.html" method="post">
+          
+          @if (Session::has('error_message'))
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> {{Session::get('error_message')}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          @endif
+
+          <form action="{{route('admin.login.request')}}" method="post">
+            @csrf
             <div class="input-group mb-1">
               <div class="form-floating">
-                <input id="loginEmail" type="email" class="form-control" value="" placeholder="" />
+                <input id="loginEmail" name="email" type="email" class="form-control" value="" placeholder="Email" />
                 <label for="loginEmail">Email</label>
               </div>
               <div class="input-group-text"><span class="bi bi-envelope"></span></div>
             </div>
             <div class="input-group mb-1">
               <div class="form-floating">
-                <input id="loginPassword" type="password" class="form-control" placeholder="" />
+                <input id="loginPassword" name="password" type="password" class="form-control" placeholder="Password" />
                 <label for="loginPassword">Password</label>
               </div>
-              <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
+              <button type="button" class="input-group-text bg-white border-start-0" onclick="togglePasswordVisibility()">
+    <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
+  </button>
+              {{-- <div class="input-group-text"><span class="bi bi-lock-fill"></span></div> --}}
             </div>
             <!--begin::Row-->
             <div class="row">
