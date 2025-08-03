@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Services\Admin\AdminServices;
 
 class AdminController extends Controller
 {
@@ -32,7 +33,9 @@ class AdminController extends Controller
     public function store(LoginRequest $request)
     {
         $data =$request->all();
-            if(Auth::guard('admin')->attempt(['email' =>$data['email'], 'password' =>$data['password']])) {
+        $service = new AdminServices();
+        $loginStatus = $service->login($data);
+            if($loginStatus == 1) {
                 return redirect('admin/dashboard');
             } else {
                 return redirect()->back()->with('error_message', 'Invalid Email or Password');
