@@ -7,15 +7,26 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Http\Requests\Admin\PasswordRequest;
 use App\Services\Admin\AdminServices;
+use Session;
 
 class AdminController extends Controller
 {
+
+    protected $adminService;
+
+    // Inject AdminService using Constructor
+    public function __construct(AdminServices $adminService)
+    {
+        $this->adminService = $adminService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        Session::put('page','dashboard');
         return view('admin.dashboard');
     }
 
@@ -33,8 +44,7 @@ class AdminController extends Controller
     public function store(LoginRequest $request)
     {
         $data =$request->all();
-        $service = new AdminServices();
-        $loginStatus = $service->login($data);
+        $loginStatus = $this->adminService->login($data);
             if($loginStatus == 1) {
                 return redirect('admin/dashboard');
             } else {
@@ -55,7 +65,8 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        //
+        Session::put('page','update-password');
+        return view('admin.update_password');
     }
 
     /**
@@ -73,5 +84,24 @@ class AdminController extends Controller
     {
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');
+    }
+
+    public function verifyPassword(Request $request)
+    {
+        $data = $request->all();
+        return $this->adminService->verifyPassword($data);
+    }
+
+    public function updatePasswordRequest(PasswordRequest $request)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->input();
+            $pwdStatus = $this->adminService->updatePassword($data);
+        if ($pwdStatus['status'] == "success") {
+            return redirect()->back()->with('success_message', $pwdStatus['message']);
+        } else {
+            return redirect()->back()->with('error_message', $pwdStatus['message']);
+        }   
+        }
     }
 }

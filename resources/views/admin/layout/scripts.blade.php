@@ -224,3 +224,9 @@
       const sparkline3 = new ApexCharts(document.querySelector('#sparkline-3'), option_sparkline3);
       sparkline3.render();
     </script>
+
+    {{-- jquery --}}
+    <script src="{{ url('admin/js/jquery-3.7.1.min.js') }}"></script>
+
+    {{-- custom script --}}
+    <script src="{{ url('admin/js/custom.js') }}"></script>
