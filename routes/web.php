@@ -28,6 +28,15 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
     // Update Password Route
  Route::post('update-password', [AdminController::class, 'updatePasswordRequest'])->name('admin.update-password.request');
 
+    // Display Update Admin Details
+ Route::get('update-details', [AdminController::class, 'editDetails'])->name('admin.update-details');  
+ 
+    // Update Admin Details Route
+ Route::post('update-details', [AdminController::class, 'updateDetails'])->name('admin.update-details.request');
+
+    //Delete Profile Image Route
+ Route::post('delete-profile-image', [AdminController::class, 'deleteProfileImage']);
+
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
     });

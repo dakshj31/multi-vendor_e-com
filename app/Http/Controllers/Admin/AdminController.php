@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Http\Requests\Admin\DetailRequest;
 use App\Http\Requests\Admin\PasswordRequest;
 use App\Services\Admin\AdminServices;
 use Session;
@@ -104,4 +105,23 @@ class AdminController extends Controller
         }   
         }
     }
-}
+
+    public function editDetails(){
+        Session::put('page','update-details');
+        return view('admin.update_details');
+    }
+
+    public function updateDetails(DetailRequest $request){
+        Session::put('page','update-details');
+        if ($request->isMethod('post')) {
+            $this->adminService->updateDetails($request);
+            return redirect()->back()->with('success_message', 'Admin Details have been updated successfully!');
+        }
+    }
+
+    public function deleteProfileImage(Request $request)
+    {
+        $status = $this->adminService->deleteProfileImage($request->admin_id);
+        return response()->json($status);
+    }
+ }
