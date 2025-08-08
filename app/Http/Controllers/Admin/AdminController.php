@@ -124,4 +124,11 @@ class AdminController extends Controller
         $status = $this->adminService->deleteProfileImage($request->admin_id);
         return response()->json($status);
     }
+
+    public function subadmins()
+    {
+        Session::put('page', 'subadmins');
+        $subadmins = $this->adminService->subadmins();
+        return view('admin.subadmins.subadmins')->with(compact('subadmins'));
+    }
  }

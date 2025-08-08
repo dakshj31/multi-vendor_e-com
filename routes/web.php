@@ -22,7 +22,7 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
     // Display Update Password Page
  Route::get('update-password', [AdminController::class, 'edit'])->name('admin.update-password');   
 
-    //Verify Password Route
+    // Verify Password Route
  Route::post('verify-password', [AdminController::class, 'verifyPassword'])->name('admin.verify-password');
 
     // Update Password Route
@@ -34,8 +34,11 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
     // Update Admin Details Route
  Route::post('update-details', [AdminController::class, 'updateDetails'])->name('admin.update-details.request');
 
-    //Delete Profile Image Route
+    // Delete Profile Image Route
  Route::post('delete-profile-image', [AdminController::class, 'deleteProfileImage']);
+
+    // Sub-Admins
+ Route::get('subadmins', [AdminController::class, 'subadmins']);      
 
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
