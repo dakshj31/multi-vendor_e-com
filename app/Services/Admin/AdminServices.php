@@ -102,4 +102,17 @@ class AdminServices {
         $subadmins = Admin::where('role', 'subadmin')->get();
         return $subadmins;
     }
+
+    public function updateSubadminStatus($data)
+    {
+        $status = ($data['status'] == "Active") ? 0 : 1;
+        Admin::where('id', $data['subadmin_id'])->update(['status' => $status]);
+        return $status; 
+    }
+
+    public function deleteSubadmin($id)
+    {
+        Admin::where('id',$id)->delete();
+        $message = 'Subadmin deleted successfully!';
+    }
 }

@@ -43,7 +43,15 @@
                                             <td>{{$subadmin->name}}</td>
                                             <td>{{$subadmin->mobile}}</td>
                                             <td>{{$subadmin->email}}</td>
-                                            <td></td>
+                                            <td>@if ($subadmin->status==1)
+                                                <a class="updateSubadminStatus" data-subadmin_id="{{ $subadmin->id }}" style='color:#3f6ed' href="javascript:void(0)">
+                                                    <i class="fas fa-toggle-on" data-status="Active"></i>
+                                                </a>
+                                                @else
+                                                <a class="updateSubadminStatus" data-subadmin_id="{{ $subadmin->id }}" style='color:grey' href="javascript:void(0)"><i class="fas fa-toggle-off" data-status="Inactive"></i>
+                                                </a>
+                                                @endif&nbsp;&nbsp; <a style='color:#3f6ed' title="Delete Subadmin" href="{{url('admin/delete-subadmin/'.$subadmin->id)}}"><i class="fas fa-trash"></i></a>
+                                        </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

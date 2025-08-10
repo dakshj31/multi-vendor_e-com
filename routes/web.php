@@ -38,7 +38,9 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::post('delete-profile-image', [AdminController::class, 'deleteProfileImage']);
 
     // Sub-Admins
- Route::get('subadmins', [AdminController::class, 'subadmins']);      
+ Route::get('subadmins', [AdminController::class, 'subadmins']);
+ Route::post('update-subadmin-status', [AdminController::class, 'updateSubadminStatus']);
+ Route::get('delete-subadmin/{id}', [AdminController::class, 'deleteSubadmin']);
 
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
