@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\AdminsRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Http\Requests\Admin\SubadminRequest;
 use App\Http\Requests\Admin\DetailRequest;
 use App\Http\Requests\Admin\PasswordRequest;
 use App\Services\Admin\AdminServices;
@@ -46,8 +48,10 @@ class AdminController extends Controller
     {
         $data =$request->all();
         $loginStatus = $this->adminService->login($data);
-            if($loginStatus == 1) {
-                return redirect('admin/dashboard');
+            if($loginStatus == "success") {
+                return redirect()->route('dashboard.index');
+            } elseif ($loginStatus == "inactive") {
+                return redirect()->back()->with('error_message', 'Your account is inactive.Please contact the administrator.');
             } else {
                 return redirect()->back()->with('error_message', 'Invalid Email or Password');
             }
@@ -145,5 +149,44 @@ class AdminController extends Controller
     {
         $result = $this->adminService->deleteSubadmin($id);
         return redirect()->back()->with('success_message', $result['message']);
+    }
+
+    public function addEditSubadmin($id = null)
+    {
+        if ($id == "") {
+            $title = "Add Subadmin";
+            $subadmindata = array();
+        } else {
+            $title = "Edit Subadmin";
+            $subadmindata = Admin::find($id);
+        }
+        return view('admin.subadmins.add_edit_subadmin')->with(compact('title', 'subadmindata'));
+    }
+
+    public function addEditSubadminRequest(SubadminRequest $request)
+    {
+        if ($request->isMethod('post')) {
+            $result = $this->adminService->addEditSubadmin($request);
+            return redirect('admin/subadmins')->with('success_message', $result['message']);
+        }
+    }
+
+    public function updateRole($id)
+    {
+        $subadminRoles = AdminsRole::where('subadmin_id', $id)->get()->toArray();
+        $subadminDetails = Admin::where('id', $id)->first()->toArray();
+        $modules = ['categories', 'products', 'orders', 'users'];
+        $title = "Update " . $subadminDetails['name'] . "Subadmin Roles/Permissions";
+        return view('admin.subadmins.update_roles')->with(compact('title', 'id', 'subadminRoles', 'modules'));
+    }
+
+    public function updateRoleRequest(Request $request)
+    {
+        if($request->isMethod('post')) {
+            $data = $request->all();
+            $service = new AdminService();
+            $result = $service->updateRole($request);
+            return redirect()->back()->width('success_message', $result['message']);
+        }
     }
  }
