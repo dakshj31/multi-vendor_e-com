@@ -176,7 +176,7 @@ class AdminController extends Controller
         $subadminRoles = AdminsRole::where('subadmin_id', $id)->get()->toArray();
         $subadminDetails = Admin::where('id', $id)->first()->toArray();
         $modules = ['categories', 'products', 'orders', 'users'];
-        $title = "Update " . $subadminDetails['name'] . "Subadmin Roles/Permissions";
+        $title = "Update " . $subadminDetails['name'] . " Subadmin Roles/Permissions";
         return view('admin.subadmins.update_roles')->with(compact('title', 'id', 'subadminRoles', 'modules'));
     }
 
@@ -184,9 +184,9 @@ class AdminController extends Controller
     {
         if($request->isMethod('post')) {
             $data = $request->all();
-            $service = new AdminService();
+            $service = new AdminServices();
             $result = $service->updateRole($request);
-            return redirect()->back()->width('success_message', $result['message']);
+            return redirect()->back()->with('success_message', $result['message']);
         }
     }
  }

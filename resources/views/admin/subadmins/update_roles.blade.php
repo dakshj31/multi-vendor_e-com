@@ -60,30 +60,47 @@
 <!--begin::Form-->
 <form name="subadminForm" id="subadminForm" action="{{ url('admin/update-role/request/')}}" method="POST">@csrf
     <input type="hidden" name="subadmin_id" value="{{ $id }}">
-    @if (!empty($subadminRoles))
-        @foreach ($subadminRoles as $role)
-            @if ($role['module']=="categories")
-                @php
-                    $viewCategories = $role['view_access'] == 1 ? "checked" : "";
-                    $editCategories = $role['edit_access'] == 1 ? "checked" : "";
-                    $fullCategories = $role['full_access'] == 1 ? "checked" : "";
-                @endphp
-            @endif
-        @endforeach
-    @endif
-
+   <div class="card shadow-sm" >
     <div class="card-body">
-        <div class="form-group col-md-12">
-            <label for="categories">Categories:</label>
-            <input type="checkbox" name="categories[view]" value="1" {{ $viewCategories ?? ''}}> View Access
-            <input type="checkbox" name="categories[edit]" value="1" {{ $editCategories ?? ''}}> View/Edit Access
-            <input type="checkbox" name="categories[full]" value="1" {{ $fullCategories ?? ''}}> Full Access
+        @foreach ($modules as $module)
+            @php
+                //Fetch permissions for the current module
+                $viewAccess = $editAccess = $fullAccess = "";
+                foreach ($subadminRoles as $role) {
+            if ($role['module'] == $module){
+                    $viewAccess = $role['view_access'] == 1 ? "checked" : "";
+                    $editAccess = $role['edit_access'] == 1 ? "checked" : "";
+                    $fullAccess = $role['full_access'] == 1 ? "checked" : "";
+            }
+        }
+            @endphp
+
+    <div class="form-group mb-3">
+        <label><strong>{{ucwords(str_replace('_', ' ', $module))}}:</strong></label>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name=" {{ $module }}[view] " value="1" {{$viewAccess}}>
+            <label class="form-check-label">View Access</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name=" {{ $module }}[edit] " value="1" {{$editAccess}}>
+            <label class="form-check-label">View/Edit Access</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name=" {{ $module }}[full] " value="1" {{$fullAccess}}>
+            <label class="form-check-label">Full Access</label>
         </div>
     </div>
-
-    <div class="card-footer">
-        <button type="submit" class="btn btn-primary">Submit</button>
+<hr>
+        @endforeach
     </div>
+    <div class="card-footer text-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Changes
+        </button>
+    </div>
+   </div>
 </form>
 <!--end::Form-->
 </div>
