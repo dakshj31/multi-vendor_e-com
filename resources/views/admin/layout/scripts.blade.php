@@ -230,3 +230,13 @@
 
     {{-- custom script --}}
     <script src="{{ url('admin/js/custom.js') }}"></script>
+
+    {{-- Datatable --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#categories").DataTable();
+        $("#subadmins").DataTable();
+      });
+    </script>

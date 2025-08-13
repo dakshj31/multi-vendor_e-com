@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,6 +47,8 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::get('/update-role/{id}', [AdminController::class, 'updateRole']);
  Route::post('/update-role/request', [AdminController::class, 'updateRoleRequest']);
 
+    // Categories
+ Route::resource('categories', CategoryController::class);
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
     });
