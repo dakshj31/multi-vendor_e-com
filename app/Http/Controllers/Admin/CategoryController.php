@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\Admin\CategoryService;
 use App\Models\Category;
 use Session;
+use App\Http\Requests\Admin\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -39,13 +40,15 @@ class CategoryController extends Controller
     public function create()
     {
         $title = 'Add Category';
-        return view('admin.categories.add_edit_category', compact('title'));
+        $category = new Category();
+        $getCategories = Category::getCategories('Admin');
+        return view('admin.categories.add_edit_category', compact('title', 'getCategories', 'category'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         $message = $this->categoryService->addEditcategory($request);
         return redirect()->route('categories.index')->with('success_message', $message);
@@ -66,13 +69,14 @@ class CategoryController extends Controller
     {
         $title = 'Edit Category';
         $category = Category::findOrFail($id);
-        return view('admin.categories.add_edit_category', compact('title', 'category')); 
+        $getCategories = Category::getCategories('Admin');
+        return view('admin.categories.add_edit_category', compact('title', 'category', 'getCategories')); 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
         $request->merge(['id' => $id]);
         $message = $this->categoryService->addEditCategory($request);

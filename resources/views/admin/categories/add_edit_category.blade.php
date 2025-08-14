@@ -7,7 +7,7 @@
 <div class="container-fluid">
 <!--begin::Row-->
 <div class="row">
-<div class="col-sm-6"><h3 class="mb-0">Categories Management</h3></div>
+<div class="col-sm-6"><h3 class="mb-0">Catalogue Management</h3></div>
 <div class="col-sm-6">
 <ol class="breadcrumb float-sm-end">
 <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -58,14 +58,54 @@
           @endforeach
 
 <!--begin::Form-->
-<form name="categoryForm" id="categoryForm" action="{{ isset($category)? route('categories.update', $category->id): route('categories.store') }}"
+@if(!empty($category->id))
+    <form name="categoryForm" id="categoryForm"
+          action="{{ route('categories.update', $category->id) }}" 
+          method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+@else
+    <form name="categoryForm" id="categoryForm"
+          action="{{ route('categories.store') }}" 
+          method="POST" enctype="multipart/form-data">
+        @csrf
+@endif
+
+{{-- <form name="categoryForm" id="categoryForm" action="{{ isset($category)? route('categories.update', $category->id): route('categories.store') }}"
     method="POST" enctype="multipart/form-data"> @csrf
-    @if (isset($category)) @method('PUT') @endif
+    @if (isset($category)) @method('PUT') @endif --}}
     <div class="card-body">
+        
+        <div class="mb-3">
+            <label for="category_name">Category Level*</label>
+            <select name="parent_id" class="form-control">
+                <option value="">Select</option>
+                <option value="" @if ($category->parent_id == null) selected @endif>Main Category</option>
+                @foreach ($getCategories as $cat)
+                    <option value="{{ $cat['id'] }}" @if(isset($category['parent_id']) && $category['parent_id'] == $cat['id']) selected @endif> {{$cat['name']}} </option>
+                    @if (!empty($cat['subcategories']))
+                        @foreach ($cat['subcategories'] as $subcat)
+                            <option value="{{ $subcat['id'] }}" @if (isset($category['parent_id']) && $category['parent_id'] == $subcat['id']) selected @endif>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subcat['name'] }}
+                            </option>
+                            @if(!empty($subcat['subcategories']))
+                                @foreach ($subcat['subcategories'] as $subsubcat)
+                                    <option value="{{ $subsubcat['id'] }}" @if(isset($category['parent_id']) && $category['parent_id'] == $subsubcat['id']) selected @endif>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subsubcat['name'] }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        @endforeach
+                    @endif
+                @endforeach
+            </select>
+        </div>
+
         <div class="mb-3">
             <label class="form-label" for="category_name">Category Name*</label>
             <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Enter Category Name" value="{{ old('category_name', $category->name??'') }}">
         </div>
+
         <div class="mb-3">
             <label class="form-label" for="category_image">Category Image</label>
             <input type="file" name="category_image" id="category_image" class="form-control" accept="image/*">
@@ -75,6 +115,7 @@
                 </div>
             @endif
         </div>
+
         <div class="mb-3">
             <label for="size_chart" class="form-label">Size Chart</label>
             <input type="file" name="size_chart" id="size_chart" class="form-control" accept="image/*">
@@ -84,18 +125,22 @@
                 </div>
             @endif
         </div>
+
         <div class="mb-3">
             <label for="category_discount" class="form-label">Category Discount</label>
             <input type="text" class="form-control" name="category_discount" id="category_discount" placeholder="Enter Category Discount" value="{{ old('category_discount', $category->discount??'') }}">
         </div>
+
         <div class="mb-3">
             <label for="url" class="form-label">Category URL*</label>
             <input type="text" class="form-control" name="url" id="url" placeholder="Enter Category URL" value="{{ old('url', $category->url??'') }}">
         </div>
+
         <div class="mb-3">
             <label for="description" class="form-label">Category Description</label>
             <textarea name="description" class="form-control" id="description" rows="3" placeholder="Enter Description">{{ old('description',$category->description ??'')}}</textarea> 
         </div>
+
         <div class="mb-3">
             <label for="meta_title" class="form-label">Meta Title</label>
             <input type="text" class="form-control" name="meta_title" id="meta_title" placeholder="Enter Meta Title" value="{{ old('meta_title', $category->meta_title??'') }}">
@@ -104,15 +149,18 @@
             <label for="meta_description" class="form-label">Meta Description</label>
             <input type="text" class="form-control" name="meta_description" id="meta_description" placeholder="Enter Meta Description" value="{{ old('meta_description', $category->meta_description??'') }}">
         </div>
+
         <div class="mb-3">
             <label for="meta_keywords" class="form-label">Meta Keywords</label>
             <input type="text" class="form-control" name="meta_keywords" id="meta_keywords" placeholder="Enter Meta Keywords" value="{{ old('meta_keywords', $category->meta_keywords??'') }}">
         </div>
         <div class="mb-3">
             <label for="menu_status">Show on Header Menu</label><br>
-            <input type="checkbox" name="menu_status" value="1" {{!empty($category->menu_status) ? 'checked': ''}}>
+            <input type="checkbox" name="menu_status" value="1" {{!empty($category->menu_status) ? 'checked': ''}} >
         </div>
+
     </div>
+
 <div class="card-footer">
     <button type="submit" class="btn btn-primary">Submit</button>
 </div>
