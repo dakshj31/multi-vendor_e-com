@@ -49,6 +49,9 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
 
     // Categories
  Route::resource('categories', CategoryController::class);
+ Route::post('update-category-status', [CategoryController::class, 'updateCategoryStatus']);
+ Route::post('delete-category-image', [CategoryController::class, 'deleteCategoryImage']);
+ Route::post('delete-sizechart-image', [CategoryController::class, 'deleteSizechartImage']);
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
     });

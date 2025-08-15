@@ -84,7 +84,7 @@ class CategoryService{
             $sizechart_tmp = $request->file('size_chart');
             if ($sizechart_tmp->isValid()) {
                 $manager = new ImageManager(new Driver());
-                $image = $manger->read($sizechart_tmp);
+                $image = $manager->read($sizechart_tmp);
                 $sizechart_extension = $sizechart_tmp->getClientOriginalExtension();
                 $sizechartimageName = rand(111, 99999) . '.' . $sizechart_extension;
                 $sizechart_image_path = 'front/images/sizecharts/' . $sizechartimageName;
@@ -124,5 +124,47 @@ class CategoryService{
         $category->save();
 
         return $message;
+    }
+
+    public function updateCategoryStatus($data)
+    {
+        $status = ($data['status'] == "Active") ? 0 : 1;
+        Category::where('id', $data['category_id'])->update(['status' => $status]);
+        return $status;
+    }
+
+    public function deleteCategory($id)
+    {
+        Category::where('id', $id)->delete();
+        $message = 'Category deleted successfully!';
+        return ['message' => $message];
+    }
+
+    public function deleteCategoryImage($categoryId)
+    {
+        $categoryImage = Category::where('id', $categoryId)->value('image');
+        if($categoryImage) {
+            $category_image_path = 'admin/images/categories/' . $categoryImage;
+            if(file_exists(public_path($category_image_path))) {
+                unlink(public_path($category_image_path));
+            }
+            Category::where('id', $categoryId)->update(['image' => null]);
+            return ['status' => true, 'message' => 'Category image deleted successfully!'];
+        }
+        return ['status' => false, 'message' => 'Category image not found!'];
+    }
+
+    public function deleteSizechartImage($categoryId)
+    {
+        $sizechartImage = Category::where('id', $categoryId)->value('image');
+        if($sizechartImage) {
+            $sizechart_image_path = 'admin/images/sizecharts/' . $sizechartImage;
+            if(file_exists(public_path($sizechart_image_path))) {
+                unlink(public_path($sizechart_image_path));
+            }
+            Category::where('id', $categoryId)->update(['image' => null]);
+            return ['status' => true, 'message' => 'Size Chart image deleted successfully!'];
+        }
+        return ['status' => false, 'message' => 'Size Chart image not found!'];
     }
 }

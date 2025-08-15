@@ -56,12 +56,15 @@
                       <p>Update Details</p>
                     </a>
                   </li>
-                  <li class="nav-item">
+                  @if (Auth::guard('admin')->user()->role=="admin")
+                      <li class="nav-item">
                      <a href="{{ url('admin/subadmins')}}" class="nav-link {{ (Session::get('page') == 'subadmins') ? 'active' : '' }}">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Subadmins</p>
                     </a>
                   </li>
+                  @endif
+                  
                 </ul>
               </li>
 

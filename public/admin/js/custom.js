@@ -68,4 +68,74 @@ $(document).ready(function(){
             }
         });
     });
+
+    // Update Category Status
+    $(document).on("click", ".updateCategoryStatus", function() {
+        var status = $(this).find("i").data("status");
+        var category_id = $(this).data("category-id");
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'post',
+            url: '/admin/update-category-status',
+            data: {status: status, category_id: category_id },
+            success: function(resp) {
+                if (resp['status'] == 0) {
+                    $("a[data-category-id='" + category_id + "']").html("<i class='fas fa-toggle-off' style='color:grey' data-status='Inactive'></i>");
+                } else if  (resp['status'] == 1) {
+                    $("a[data-category-id='" + category_id + "']").html("<i class='fas fa-toggle-on' style='color:#3f6ed3' data-status='Active'></i>");
+                }
+            },
+            error: function() {
+                alert("Error");
+            }
+        });
+    });
+
+    //delete category image in edit category
+    $(document).on("click", "#deleteCategoryImage", function(){
+        if(confirm('Are you sure you want to remove this category image?')) {
+            var category_id = $(this).data('category-id');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'post',
+                url: '/admin/delete-category-image',
+                data: {category_id: category_id },
+                success:function(resp){
+                    if(resp['status'] == true) {
+                        alert(resp['message']);
+                        $('#categoryImageBlock').remove();
+                    }
+                },error:function() {
+                    alert("Error occurred while deleting the image.");
+                }
+            });
+        }
+    });
+
+    // delete sizechart image in edit category
+    $(document).on("click", "#deleteSizeChartImage", function(){
+        if(confirm('Are you sure you want to remove this size chart image?')) {
+            var category_id = $(this).data('category-id');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'post',
+                url: '/admin/delete-sizechart-image',
+                data: {category_id: category_id },
+                success:function(resp){
+                    if(resp['status'] == true) {
+                        alert(resp['message']);
+                        $('#sizechartImageBlock').remove();
+                    }
+                },error:function() {
+                    alert("Error occurred while deleting the image.");
+                }
+            });
+        }
+    });
 });

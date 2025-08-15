@@ -110,8 +110,9 @@
             <label class="form-label" for="category_image">Category Image</label>
             <input type="file" name="category_image" id="category_image" class="form-control" accept="image/*">
             @if (!empty($category->image))
-                <div class="mt-2">
+                <div class="mt-2" id="categoryImageBlock">
                     <img src="{{ asset('front/images/categories/'.$category->image) }}" width="50" alt="Category Image">
+                    <a href="javascript:void(0);" id="deleteCategoryImage" data-category-id="{{$category->id}}" class="text-danger">Delete</a>
                 </div>
             @endif
         </div>
@@ -120,8 +121,9 @@
             <label for="size_chart" class="form-label">Size Chart</label>
             <input type="file" name="size_chart" id="size_chart" class="form-control" accept="image/*">
              @if (!empty($category->size_chart))
-                <div class="mt-2">
+                <div class="mt-2" id="sizechartImageBlock">
                     <img src="{{ asset('front/images/sizecharts/'.$category->size_chart) }}" width="50" alt="Size Chart">
+                    <a href="javascript:void(0);" id="deleteSizeChartImage" data-category-id="{{$category->id}}" class="text-danger">Delete</a>
                 </div>
             @endif
         </div>
