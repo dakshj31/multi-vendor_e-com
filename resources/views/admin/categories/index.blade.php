@@ -24,7 +24,9 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <h3 class="card-title">Categories</h3>
+                            @if ($categoriesModule['edit_access']==1 || $categoriesModule['full_access']==1)
                             <a style="max-width:150px;float: right; display: inline-block;" href="{{ url('admin/categories/create') }}" class="btn btn-block btn-primary">Add Category</a>
+                            @endif
                         </div>
                         <div class="card-body">
                             @if (Session::has('success_message'))
@@ -53,6 +55,7 @@
                                             <td>{{$category->url}}</td>
                                             <td>{{$category->created_at->format('F j, Y, g:i a') }}</td>
                                             <td>
+                                                 @if ($categoriesModule['edit_access']==1 || $categoriesModule['full_access']==1)
                                                 {{-- actions enable/diasble edit,delte will be added here --}}
                                                 @if ($category->status == 1)
                                                     <a class="updateCategoryStatus" data-category-id="{{$category->id}}"
@@ -66,12 +69,15 @@
                                                 <a href="{{ url('admin/categories/'.$category->id.'/edit') }}">
                                                 <i class="fas fa-edit"></i></a>
                                                 &nbsp;&nbsp;
+                                                @if ($categoriesModule['full_access']==1)
                                                 <form action="{{route('categories.destroy',$category->id) }}" method="POST" 
                                                     style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this category?')">@csrf @method('DELETE')
                                                     <button type="submit" style="border:none; background:none; color:#3f6ed3;" title="Delete Category">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endif
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

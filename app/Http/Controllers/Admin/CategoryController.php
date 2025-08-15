@@ -50,7 +50,7 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $message = $this->categoryService->addEditcategory($request);
+        $message = $this->categoryService->addEditCategory($request);
         return redirect()->route('categories.index')->with('success_message', $message);
     }
 

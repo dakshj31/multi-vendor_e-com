@@ -10,8 +10,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class CategoryService{
 
-    public function categories()
-    {
+    public function categories(){
     $categories = Category::with('parentcategory')->get();
     $admin = Auth::guard('admin')->user();
     $status = "success";
