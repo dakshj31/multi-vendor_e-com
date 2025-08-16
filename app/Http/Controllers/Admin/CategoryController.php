@@ -80,7 +80,7 @@ class CategoryController extends Controller
     {
         $request->merge(['id' => $id]);
         $message = $this->categoryService->addEditCategory($request);
-        return redirect()->route('categories.index')->with('succcess_message', $message);
+        return redirect()->route('categories.index')->with('success_message', $message);
     }
 
     /**

@@ -57,7 +57,7 @@
                                                 @else
                                                 <a class="updateSubadminStatus" data-subadmin_id="{{ $subadmin->id }}" style='color:grey' href="javascript:void(0)"><i class="fas fa-toggle-off" data-status="Inactive"></i>
                                                 </a>
-                                                @endif&nbsp;&nbsp;<a href="{{ url('admin/add-edit-subadmin/'.$subadmin->id) }}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a title="Set Permission for Sub-admin" href="{{url('admin/update-role/'.$subadmin->id)}}"><i class="fas fa-unlock"></i></a>  <a style='color:#3f6ed' title="Delete Subadmin" href="{{url('admin/delete-subadmin/'.$subadmin->id)}}"><i class="fas fa-trash"></i></a>
+                                                @endif&nbsp;&nbsp;<a href="{{ url('admin/add-edit-subadmin/'.$subadmin->id) }}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a title="Set Permission for Sub-admin" href="{{url('admin/update-role/'.$subadmin->id)}}"><i class="fas fa-unlock"></i></a>&nbsp;&nbsp;<a style='color:#3f6ed' data-module="subadmin" data-id="{{ $subadmin->id }}" class="confirmDelete" name="Subadmin" title="Delete Subadmin" <?php /* href="{{url('admin/delete-subadmin/'.$subadmin->id)}}"*/ ?>><i class="fas fa-trash"></i></a>
                                         </td>
                                         </tr>
                                     @endforeach

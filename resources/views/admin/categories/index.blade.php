@@ -71,8 +71,8 @@
                                                 &nbsp;&nbsp;
                                                 @if ($categoriesModule['full_access']==1)
                                                 <form action="{{route('categories.destroy',$category->id) }}" method="POST" 
-                                                    style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this category?')">@csrf @method('DELETE')
-                                                    <button type="submit" style="border:none; background:none; color:#3f6ed3;" title="Delete Category">
+                                                    style="display:inline-block;">@csrf @method('DELETE')
+                                                    <button type="button" class="confirmDelete" name="Category" style="border:none; background:none; color:#3f6ed3;" href="javascript:void(0)" data-module="category" data-id="{{ $category->id }}" title="Delete Category">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
