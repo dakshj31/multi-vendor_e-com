@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,6 +53,10 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::post('update-category-status', [CategoryController::class, 'updateCategoryStatus']);
  Route::post('delete-category-image', [CategoryController::class, 'deleteCategoryImage']);
  Route::post('delete-sizechart-image', [CategoryController::class, 'deleteSizechartImage']);
+
+     // Products
+ Route::resource('products', ProductController::class);
+     
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
     });
