@@ -56,6 +56,7 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
 
      // Products
  Route::resource('products', ProductController::class);
+ Route::post('update-product-status', [ProductController::class, 'updateProductStatus']);
      
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    

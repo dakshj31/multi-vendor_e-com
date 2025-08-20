@@ -35,7 +35,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           @endif
-                            <table id="products" class="table table-bordered table-stripped">
+                            <table id="products" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -53,7 +53,24 @@
                                             <td>{{$product->product_code}}</td>
                                             <td>{{$product->product_color}}</td>
                                             <td>
+                                                @if ($productsModule['edit_access']==1 || $productsModule['full_access']==1)
                                                 {{-- Actions (Enable/Disable, Edit, Delete) will be added --}}
+                                                @if ($product->status == 1)
+                                                    <a class="updateProductStatus" data-product-id="{{$product->id}}"
+                                                         style="color:3f6ed3" href="javascript:void(0)"><i class="fas fa-toggle-on" data-status="Active"></i></a>
+                                                @else
+                                                    <a class="updateProductStatus" data-product-id="{{$product->id}}"
+                                                         style="color:grey" href="javascript:void(0)"><i class="fas fa-toggle-off" data-status="Inactive"></i></a>
+                                                @endif
+                                                @endif
+                                                @if ($productsModule['full_access']==1)
+                                                <form action="{{route('products.destroy',$product->id) }}" method="POST" 
+                                                    style="display:inline-block;">@csrf @method('DELETE')
+                                                    <button type="button" class="confirmDelete" name="Product" style="border:none; background:none; color:#3f6ed3;" href="javascript:void(0)" data-module="product" data-id="{{ $product->id }}" title="Product Category">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
