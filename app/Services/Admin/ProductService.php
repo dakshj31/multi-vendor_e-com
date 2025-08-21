@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ProductService
 {
     public function products() {
-        $products = Product::get();
+        $products = Product::with('category')->get();
 
         // Set Admin/Subadmin Permissions for Products
         $productsModuleCount = AdminsRole::where([

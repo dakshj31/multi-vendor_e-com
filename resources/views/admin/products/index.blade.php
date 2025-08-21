@@ -42,6 +42,8 @@
                                         <th>Product Name</th>
                                         <th>Product Code</th>
                                         <th>Product Color</th>
+                                        <th>Category</th>
+                                        <th>Parent Category</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -52,6 +54,14 @@
                                             <td>{{$product->product_name}}</td>
                                             <td>{{$product->product_code}}</td>
                                             <td>{{$product->product_color}}</td>
+                                            <td>{{$product['category']['name']}}</td>
+                                            <td>
+                                                @if (isset($product['category']['parentcategory']['name']))
+                                                    {{$product['category']['parentcategory']['name']}}
+                                                @else
+                                                    ROOT
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if ($productsModule['edit_access']==1 || $productsModule['full_access']==1)
                                                 {{-- Actions (Enable/Disable, Edit, Delete) will be added --}}
@@ -62,6 +72,10 @@
                                                     <a class="updateProductStatus" data-product-id="{{$product->id}}"
                                                          style="color:grey" href="javascript:void(0)"><i class="fas fa-toggle-off" data-status="Inactive"></i></a>
                                                 @endif
+                                                @endif
+                                                @if ($productsModule['edit_access']==1 || $productsModule['full_access']==1)
+                                                    <a href="{{ url('admin/products/'.$product->id.'/edit') }}">
+                                                <i class="fas fa-edit"></i></a>
                                                 @endif
                                                 @if ($productsModule['full_access']==1)
                                                 <form action="{{route('products.destroy',$product->id) }}" method="POST" 

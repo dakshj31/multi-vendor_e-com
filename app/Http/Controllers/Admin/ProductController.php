@@ -40,7 +40,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $title='Add Product';
+        $getCategories = Category::getCategories('Admin');
+        return view('admin.products.add_edit_product',compact('title','getCategories'));
     }
 
     /**
@@ -48,7 +50,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $message = $this->productService->addEditProduct($request);
+        return redirect()->route('products.index')->with('success_message', $message);
     }
 
     /**
@@ -64,7 +67,10 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = 'Edit Product';
+        $product = Product::findOrfail($id);
+        $getCategories = Categories::getCategories('Admin');
+        return view('admin.products.add_edit_product',compact('title', 'product', 'getCategories'));
     }
 
     /**
@@ -72,7 +78,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->merge(['id'=>$id]);
+        $message = $this->productService->addEditProduct($request);
+        return redirect()->route('products.index')->with('success_message',$message);
     }
 
     /**
