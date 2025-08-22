@@ -75,24 +75,21 @@
     method="POST" enctype="multipart/form-data"> @csrf
     @if (isset($category)) @method('PUT') @endif --}}
     <div class="card-body">
-        
         <div class="mb-3">
-            <label for="category_name">Category Level*</label>
-            <select name="parent_id" class="form-control">
+            <label for="category_id">Category Level(Selct Category)*</label>
+            <select name="category_id" class="form-control">
                 <option value="">Select</option>
-                <option value="" @if ($category->parent_id == null) selected @endif>Main Category</option>
                 @foreach ($getCategories as $cat)
-                    <option value="{{ $cat['id'] }}" @if(isset($category['parent_id']) && $category['parent_id'] == $cat['id']) selected @endif> {{$cat['name']}} </option>
+                    <option value="{{$cat['id']}}" @if (old('category_id', $product->category_id ?? ' ') == $cat['id']) selected  
+                    @endif>{{$cat['name']}}</option>
                     @if (!empty($cat['subcategories']))
                         @foreach ($cat['subcategories'] as $subcat)
-                            <option value="{{ $subcat['id'] }}" @if (isset($category['parent_id']) && $category['parent_id'] == $subcat['id']) selected @endif>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subcat['name'] }}
-                            </option>
-                            @if(!empty($subcat['subcategories']))
+                            <option value="{{$subcat['id']}}" @if (old('category_id', $product->category_id ?? ' ') == $subcat['id']) selected
+                            @endif>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subcat['name'] }}</option>
+                            @if (!empty($subcat['subcategories']))
                                 @foreach ($subcat['subcategories'] as $subsubcat)
-                                    <option value="{{ $subsubcat['id'] }}" @if(isset($category['parent_id']) && $category['parent_id'] == $subsubcat['id']) selected @endif>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subsubcat['name'] }}
-                                    </option>
+                                    <option value="{{$subsubcat['id']}}" @if (old('category_id', $product->category_id ?? ' ') == $subsubcat['id']) selected
+                                    @endif> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{$subsubcat['name']}}</option>
                                 @endforeach
                             @endif
                         @endforeach
@@ -102,65 +99,91 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="category_name">Category Name*</label>
-            <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Enter Category Name" value="{{ old('category_name', $category->name??'') }}">
+          <label for="product_name" class="form-label">Product Name*</label>
+          <input type="text" class="form-control" id="product_name" name="product_name" value="{{old('product_name', $product->product_name ?? '')}}" placeholder="Enter Product Name">
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="category_image">Category Image</label>
-            <input type="file" name="category_image" id="category_image" class="form-control" accept="image/*">
-            @if (!empty($category->image))
-                <div class="mt-2" id="categoryImageBlock">
-                    <img src="{{ asset('front/images/categories/'.$category->image) }}" width="50" alt="Category Image">
-                    <a href="javascript:void(0);" id="deleteCategoryImage" data-category-id="{{$category->id}}" class="text-danger">Delete</a>
-                </div>
-            @endif
+          <label for="product_code" class="form-label">Product Code*</label>
+          <input type="text" class="form-control" id="product_code" name="product_code" value="{{old('product_code', $product->product_code ?? '')}}" placeholder="Enter Product Code">
         </div>
 
         <div class="mb-3">
-            <label for="size_chart" class="form-label">Size Chart</label>
-            <input type="file" name="size_chart" id="size_chart" class="form-control" accept="image/*">
-             @if (!empty($category->size_chart))
-                <div class="mt-2" id="sizechartImageBlock">
-                    <img src="{{ asset('front/images/sizecharts/'.$category->size_chart) }}" width="50" alt="Size Chart">
-                    <a href="javascript:void(0);" id="deleteSizeChartImage" data-category-id="{{$category->id}}" class="text-danger">Delete</a>
-                </div>
-            @endif
+          <label for="product_color" class="form-label">Product Color</label>
+          <input type="text" class="form-control" id="product_color" name="product_color" value="{{old('product_color', $product->product_color ?? '')}}" placeholder="Enter Product Color">
         </div>
 
         <div class="mb-3">
-            <label for="category_discount" class="form-label">Category Discount</label>
-            <input type="text" class="form-control" name="category_discount" id="category_discount" placeholder="Enter Category Discount" value="{{ old('category_discount', $category->discount??'') }}">
+          <label for="family_color" class="form-label">Family Color</label>
+          <input type="text" class="form-control" id="family_color" name="family_color" value="{{old('family_color', $product->family_color ?? '')}}" placeholder="Enter Family Color">
         </div>
 
         <div class="mb-3">
-            <label for="url" class="form-label">Category URL*</label>
-            <input type="text" class="form-control" name="url" id="url" placeholder="Enter Category URL" value="{{ old('url', $category->url??'') }}">
+          <label for="group_code" class="form-label">Group Code</label>
+          <input type="text" class="form-control" id="group_code" name="group_code" value="{{old('group_code', $product->group_code ?? '')}}" placeholder="Enter Group Code">
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Category Description</label>
-            <textarea name="description" class="form-control" id="description" rows="3" placeholder="Enter Description">{{ old('description',$category->description ??'')}}</textarea> 
+          <label for="product_price" class="form-label">Product Price*</label>
+          <input type="text" class="form-control" id="product_price" name="product_price" value="{{old('product_price', $product->product_price ?? '')}}" placeholder="Enter Product Price">
         </div>
 
         <div class="mb-3">
-            <label for="meta_title" class="form-label">Meta Title</label>
-            <input type="text" class="form-control" name="meta_title" id="meta_title" placeholder="Enter Meta Title" value="{{ old('meta_title', $category->meta_title??'') }}">
-        </div>
-        <div class="mb-3">
-            <label for="meta_description" class="form-label">Meta Description</label>
-            <input type="text" class="form-control" name="meta_description" id="meta_description" placeholder="Enter Meta Description" value="{{ old('meta_description', $category->meta_description??'') }}">
+          <label for="product_discount" class="form-label">Product Discount (%)</label>
+          <input type="number" class="form-control" step="0.01" id="product_discount" name="product_discount" value="{{old('product_discount', $product->product_discount ?? '')}}" placeholder="Enter Product Discount">
         </div>
 
         <div class="mb-3">
-            <label for="meta_keywords" class="form-label">Meta Keywords</label>
-            <input type="text" class="form-control" name="meta_keywords" id="meta_keywords" placeholder="Enter Meta Keywords" value="{{ old('meta_keywords', $category->meta_keywords??'') }}">
-        </div>
-        <div class="mb-3">
-            <label for="menu_status">Show on Header Menu</label><br>
-            <input type="checkbox" name="menu_status" value="1" {{!empty($category->menu_status) ? 'checked': ''}} >
+          <label for="product_gst" class="form-label">Product GST (%)</label>
+          <input type="number" class="form-control" step="0.01" id="product_gst" name="product_gst" value="{{old('product_gst', $product->product_gst ?? '')}}" placeholder="Enter Product GST">
         </div>
 
+        <div class="mb-3">
+          <label for="product_weight" class="form-label">Product Weight (Grams)</label>
+          <input type="number" class="form-control" step="0.01" id="product_weight" name="product_weight" value="{{old('product_weight', $product->product_weight ?? '')}}" placeholder="Enter Product Weight">
+        </div>
+
+        <div class="mb-3">
+          <label for="wash_care" class="form-label">Wash Care</label>
+          <textarea name="wash_care" class="form-control" placeholder="Enter Wash Care">{{old('wash_care', $product->wash_care ?? '')}}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Product Description</label>
+          <textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter Product Description">{{old('description', $product->description ?? '')}}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="search_keywords" class="form-label">Search Keywords</label>
+          <textarea class="form-control" name="search_keywords" id="search_keywords" placeholder="Enter Search Keywords">{{old('search_keywords', $product->search_keywords ?? '')}}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="meta_title" class="form-label">Meta Title</label>
+          <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{old('meta_title', $product->meta_title ?? '')}}">
+        </div>
+
+        <div class="mb-3">
+          <label for="meta_description" class="form-label">Meta  Description</label>
+          <input type="text" class="form-control" id="meta_description" name="meta_description" value="{{old('meta_description', $product->meta_description ?? '')}}">
+        </div>
+
+        <div class="mb-3">
+          <label for="meta_keywords" class="form-label">Meta Keywords</label>
+          <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{old('meta_keywords', $product->meta_keywords ?? '')}}">
+        </div>
+
+        <div class="mb-3">
+          <label for="is_featured" class="form-label">Is Featured?</label>
+          <select name="is_featured" class="form-sheet">
+            <option value="No" {{ (old('is_featured', $product->is_featured ?? '') == 'No') ? 'selected' : ''}}>No</option>
+            <option value="Yes" {{ (old('is_featured', $product->is_featured ?? '') == 'Yes') ? 'selected' : ''}}>Yes</option>
+          </select>
+        </div>
+        {{-- <div class="mb-3">
+          <label for="menu_status" class="form-label">Show on Header Menu</label>
+          <input type="checkbox" name="menu_status" value="1" {{ !empty($category->menu_status) ? 'checked' : ''}}>
+        </div> --}}
     </div>
 
 <div class="card-footer">
