@@ -60,7 +60,7 @@
 <!--begin::Form-->
 @if(!empty($product->id))
     <form name="productForm" id="productForm"
-          action="{{ route('products.update', $category->id) }}" 
+          action="{{ route('products.update', $product->id) }}" 
           method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -84,7 +84,7 @@
                     @endif>{{$cat['name']}}</option>
                     @if (!empty($cat['subcategories']))
                         @foreach ($cat['subcategories'] as $subcat)
-                            <option value="{{$subcat['id']}}" @if (old('category_id', $product->category_id ?? ' ') == $subcat['id']) selected
+                            <option value="{{$subcat['id']}}" @if (old('category_id', $category->category_id ?? ' ') == $subcat['id']) selected
                             @endif>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subcat['name'] }}</option>
                             @if (!empty($subcat['subcategories']))
                                 @foreach ($subcat['subcategories'] as $subsubcat)
@@ -142,6 +142,37 @@
           <label for="product_weight" class="form-label">Product Weight (Grams)</label>
           <input type="number" class="form-control" step="0.01" id="product_weight" name="product_weight" value="{{old('product_weight', $product->product_weight ?? '')}}" placeholder="Enter Product Weight">
         </div>
+
+          {{-- Product main image upload field --}}
+          <div class="mb-3">
+            <label for="main_image_dropzone" class="form-label">Product Main Image(Max 500 KB)</label>
+            <div class="dropzone" id="mainImageDropzone"></div>
+
+             {{-- hidden input to send uploaded image --}}
+            <input type="hidden" name="main_image" id="main_image_hidden">
+
+            @if (!empty($product['main_image']))
+                <a target="_blank" href="{{url('front/images/products/'.$product['main_image'])}}">
+                <img src="{{asset('front/images/products/'.$product['main_image'])}}" style="width:50px; margin:10px;"></a>
+                <a href="javascript:void(0)" style='color:#3f6ed3;' class="confirmDelete" title="Delete Product Image" data-module="product-main-image" data-id="{{$product['id']}}"><i class="fas fa-trash"></i></a>
+            @endif
+           
+          </div>
+
+          {{-- Product video upload file --}}
+          <div class="mb-3">
+            <label for="product_video_dropzone" class="from-label">Product Video(Max 2 MB)</label>
+            <div class="dropzone" id="productVideoDropzone"></div>
+
+            {{-- hidden input to send uploaded video --}}
+            <input type="hidden" name="product_video" id="product_video_hidden">
+
+            @if (!empty($product['product_video']))
+                <a target="_blank" href="{{url('front/videos/products/'.$product['product_video'])}}">View Video</a>
+                <a href="javascript:void(0)" class="confirmDelete" data-module="product-video" data-id="{{$product['id']}}">Delete Video</a>
+            @endif
+            
+          </div>
 
         <div class="mb-3">
           <label for="wash_care" class="form-label">Wash Care</label>

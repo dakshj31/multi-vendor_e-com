@@ -139,13 +139,6 @@ $(document).ready(function(){
         }
     });
 
-    // $(".confirmDelete").click(function() {
-    //     var name = $(this).attr('name');
-    //     if (confirm('Are you sure to delete this ' + name + '?')) {
-    //         return true;
-    //     }
-    //     return false;
-    // });
 
     $(document).on("click", ".confirmDelete", function(e){
         e.preventDefault();
@@ -164,9 +157,15 @@ $(document).ready(function(){
             confirmButtonText: 'Yes,delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                if (form.length > 0) {
+                //Check if form exists AND has delete route
+                if (form.length > 0 && form.attr("action")&& form.attr("method") ==="POST") {
+                    // Create and append hidden_method input if not present
+                    if (form.find("input[name='_method']").lenght===0) {
+                        form.append('<input type="hidden" name="_method" value="DELETE">');
+                    }
                     form.submit();
                 } else {
+                    // Use redirect if no delete form present
                     window.location.href = redirectUrl;
                 }
             }
