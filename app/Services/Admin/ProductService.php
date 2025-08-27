@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\AdminsRole;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
@@ -143,12 +144,37 @@ class ProductService
 
         $product->save();
 
+        // upload alternate images
+        if (!empty($data['product_images'])) {
+            // ensure we have array
+            $imageFiles = is_array($data['product_images']) ? $data['product_images'] : explode(',', $data['product_images']);
+            // remove any empty values
+            $imageFiles = array_filter($imageFiles);
+
+            foreach ($imageFiles as $index => $filename) {
+                $sourcePath = public_path('temp/' . $filename);
+                $destinationPath = public_path('front/images/products/' . $filename);
+
+                if (file_exists($sourcePath)) {
+                    @copy($sourcePath, $destinationPath);
+                    @unlink($sourcePath);
+                }
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $filename,
+                    'sort' => $index,
+                    'status' => 1
+                ]);
+            }
+        }
+
         return $message;
     }
 
     public function handleImageUpload($file)
     {
-        $imageName = time().'.'. $file->getClientOriginalExtension();
+        $imageName = time().'.'.rand(1111,9999). '.'. $file->getClientOriginalExtension();
         $file->move(public_path('front/images/products'), $imageName);
         return $imageName;
     }
@@ -181,6 +207,30 @@ class ProductService
         Product::where('id', $id)->update(['main_image'=> null]);
 
         $message = "Product main image has been deleted successfully!";
+        return $message;
+    }
+
+    public function deleteProductImage($id)
+    {
+        // Get Product Image
+        $product = ProductImage::select('image')->where('id', $id)->first();
+
+        if (!$product || !$product->main_image) {
+            return "No image found.";
+        }
+
+        // Get Product Image Path
+        $image_path = public_path('front/images/products/' . $product->image);
+
+        // Delete Product Image if exists
+        if (file_exists($image_path)) {
+            unlink($image_path);
+        }
+
+        // Delete Product Image from product_images table
+        ProductImage::where('id', $id)->delete();
+
+        $message = "Product image has been deleted successfully!";
         return $message;
     }
 

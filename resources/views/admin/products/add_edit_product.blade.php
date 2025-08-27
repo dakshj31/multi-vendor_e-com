@@ -167,6 +167,25 @@
            
           </div>
 
+          <div class="mb-3">
+            <label for="product_images_dropzone" class="form-label">
+              Alternate Product Images (Multiple Uploads Allowed, Max 500 kb each)
+            </label>
+            <div class="dropzone" id="productImagesDropzone"></div>
+            @if (isset($product->product_images) && $product->product_images->count() > 0)
+                @foreach ($product->product_images as $img)
+                    <div style="display:inline-block; position:relative; margin:5px;">
+                      <a href="{{ url('front/images/products/' . $img->image) }}" target="_blank">
+                      <img src="{{asset('front/images/products/' . $img->image)}}" style="width:50px;"></a>
+                      <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{$img->id}}"
+                        data-image="{{$img->img}}"><i class="fas fa-trash" style="position:absolute;top:0;right:0;color:red;"></i></a>
+                    </div>
+                @endforeach
+            @endif
+            {{-- Hidden input to collect alternate images --}}
+            <input type="hidden" name="product_images" id="product_images_hidden">
+          </div>
+
           {{-- Product video upload file --}}
           <div class="mb-3">
             <label for="product_video_dropzone" class="from-label">Product Video(Max 2 MB)</label>
