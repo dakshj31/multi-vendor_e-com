@@ -80,7 +80,7 @@
                                                 @if ($productsModule['full_access']==1)
                                                 <form action="{{route('products.destroy',$product->id) }}" method="POST" 
                                                     style="display:inline-block;">@csrf @method('DELETE')
-                                                    <button type="button" class="confirmDelete" name="Product" style="border:none; background:none; color:#3f6ed3;" href="javascript:void(0)" data-module="product" data-id="{{ $product->id }}" title="Product Category">
+                                                    <button type="button" class="confirmDelete" name="Product" style="border:none; background:none; color:#3f6ed3;" href="javascript:void(0)" data-module="product" data-id="{{ $product->id }}" data-use-form="1" title="Product Category">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>

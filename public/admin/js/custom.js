@@ -146,6 +146,7 @@ $(document).ready(function(){
         let module = button.data("module");
         let moduleid = button.data("id");
         let form = button.closest("form");
+        let useForm = button.data("use-form") === true || button.data("use-form") === 1 || button.data("use-form") === "1";
         let redirectUrl = "/admin/delete-" + module + "/" + moduleid;
         Swal.fire({
             title: 'Are you sure?',
@@ -157,8 +158,8 @@ $(document).ready(function(){
             confirmButtonText: 'Yes,delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                //Check if form exists AND has delete route
-                if (form.length > 0 && form.attr("action")&& form.attr("method") ==="POST") {
+                // Submit form only when explicitly flagged to use form
+                if (useForm && form.length > 0 && form.attr("action") && form.attr("method") === "POST") {
                     // Create and append hidden_method input if not present
                     if (form.find("input[name='_method']").length===0) {
                         form.append('<input type="hidden" name="_method" value="DELETE">');
