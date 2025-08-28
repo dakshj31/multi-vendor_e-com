@@ -84,7 +84,7 @@
                     @endif>{{$cat['name']}}</option>
                     @if (!empty($cat['subcategories']))
                         @foreach ($cat['subcategories'] as $subcat)
-                            <option value="{{$subcat['id']}}" @if (old('category_id', $category->category_id ?? ' ') == $subcat['id']) selected
+                            <option value="{{$subcat['id']}}" @if (old('category_id', $product->category_id ?? ' ') == $subcat['id']) selected
                             @endif>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;{{ $subcat['name'] }}</option>
                             @if (!empty($subcat['subcategories']))
                                 @foreach ($subcat['subcategories'] as $subsubcat)
@@ -178,7 +178,7 @@
                       <a href="{{ url('front/images/products/' . $img->image) }}" target="_blank">
                       <img src="{{asset('front/images/products/' . $img->image)}}" style="width:50px;"></a>
                       <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{$img->id}}"
-                        data-image="{{$img->img}}"><i class="fas fa-trash" style="position:absolute;top:0;right:0;color:red;"></i></a>
+                        data-image="{{$img->image}}"><i class="fas fa-trash" style="position:absolute;top:0;right:0;color:red;"></i></a>
                     </div>
                 @endforeach
             @endif
@@ -233,7 +233,7 @@
 
         <div class="mb-3">
           <label for="is_featured" class="form-label">Is Featured?</label>
-          <select name="is_featured" class="form-sheet">
+          <select name="is_featured" class="form-control">
             <option value="No" {{ (old('is_featured', $product->is_featured ?? '') == 'No') ? 'selected' : ''}}>No</option>
             <option value="Yes" {{ (old('is_featured', $product->is_featured ?? '') == 'Yes') ? 'selected' : ''}}>Yes</option>
           </select>

@@ -174,7 +174,7 @@ class ProductService
 
     public function handleImageUpload($file)
     {
-        $imageName = time().'.'.rand(1111,9999). '.'. $file->getClientOriginalExtension();
+        $imageName = time().'_'.rand(1111,9999).'.'.$file->getClientOriginalExtension();
         $file->move(public_path('front/images/products'), $imageName);
         return $imageName;
     }
@@ -215,7 +215,7 @@ class ProductService
         // Get Product Image
         $product = ProductImage::select('image')->where('id', $id)->first();
 
-        if (!$product || !$product->main_image) {
+        if (!$product || !$product->image) {
             return "No image found.";
         }
 

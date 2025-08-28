@@ -158,9 +158,9 @@ $(document).ready(function(){
         }).then((result) => {
             if (result.isConfirmed) {
                 //Check if form exists AND has delete route
-                if (form.length > 0 && form.attr("action")&& form.attr("method") ==="POST") {
+                if (form.length > 0 && form.attr("action")&& form.attr("method") === "POST") {
                     // Create and append hidden_method input if not present
-                    if (form.find("input[name='_method']").length===0) {
+                    if (form.find("input[name='_method']").length === 0) {
                         form.append('<input type="hidden" name="_method" value="DELETE">');
                     }
                     form.submit();
@@ -195,5 +195,7 @@ $(document).ready(function(){
             }
         });
     });
+
+    
 
 });

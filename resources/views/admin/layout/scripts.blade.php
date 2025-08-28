@@ -286,7 +286,7 @@
         maxFiles: 10,
         acceptedFiles: "image/*",
         parallelUploads: 10, // add this line to allow parallel uploads
-        uploadsMultiple: false, // keept this false unless you want to send all files in one request
+        uploadMultiple: false, // keept this false unless you want to send all files in one request
         maxFilesize: 0.5,
         addRemoveLinks: true,
         dictDefaultMessage: "Drag & drop product images or click to upload",
