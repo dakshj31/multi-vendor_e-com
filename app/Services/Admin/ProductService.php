@@ -215,7 +215,7 @@ class ProductService
         // Get Product Image
         $product = ProductImage::select('image')->where('id', $id)->first();
 
-        if (!$product || !$product->main_image) {
+        if (!$product || !$product->image) {
             return "No image found.";
         }
 
