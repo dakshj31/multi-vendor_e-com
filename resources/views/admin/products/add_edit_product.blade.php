@@ -178,7 +178,7 @@
                       <a href="{{ url('front/images/products/' . $img->image) }}" target="_blank">
                       <img src="{{asset('front/images/products/' . $img->image)}}" style="width:50px;"></a>
                       <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{$img->id}}"
-                        data-image="{{$img->img}}"><i class="fas fa-trash" style="position:absolute;top:0;right:0;color:red;"></i></a>
+                        data-image="{{$img->image}}"><i class="fas fa-trash" style="position:absolute;top:0;right:0;color:red;"></i></a>
                     </div>
                 @endforeach
             @endif

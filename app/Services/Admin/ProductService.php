@@ -213,14 +213,15 @@ class ProductService
     public function deleteProductImage($id)
     {
         // Get Product Image
-        $product = ProductImage::select('image')->where('id', $id)->first();
+        $productImage = ProductImage::select('image')->where('id', $id)->first();
 
-        if (!$product || !$product->main_image) {
+        // Validate that the record exists and has an image value
+        if (!$productImage || empty($productImage->image)) {
             return "No image found.";
         }
 
         // Get Product Image Path
-        $image_path = public_path('front/images/products/' . $product->image);
+        $image_path = public_path('front/images/products/' . $productImage->image);
 
         // Delete Product Image if exists
         if (file_exists($image_path)) {
