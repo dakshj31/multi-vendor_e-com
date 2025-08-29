@@ -29,7 +29,7 @@
 <!--begin::Col-->
 
 <!--begin::Col-->
-<div class="col-md-6">
+<div class="col-md-8">
 <!--begin::Quick Example-->
 <div class="card card-primary card-outline mb-4">
 <!--begin::Header-->
@@ -150,6 +150,78 @@
           <label for="product_weight" class="form-label">Product Weight (Grams)</label>
           <input type="number" class="form-control" step="0.01" id="product_weight" name="product_weight" value="{{old('product_weight', $product->product_weight ?? '')}}" placeholder="Enter Product Weight">
         </div>
+
+        <div class="mb-3">
+          <label class="form-label mb-1">Product Attributes</label>
+        {{-- header now --}}
+        <div class="d-none d-md-flex fw-semibold bg-light border rounded px-2 py-1 mb-2">
+          <div class="flex-fill col-2">Size</div>
+          <div class="flex-fill col-2 ms-4">SKU</div>
+          <div class="flex-fill col-2 ms-4">Price</div>
+          <div class="flex-fill col-2 ms-4">Stock</div>
+          <div class="flex-fill col-2 ms-4">Sort</div>
+          <div style="width:60px"></div>
+        </div>
+        {{-- dynamic rows --}}
+        <div class="field_wrapper">
+          {{-- first row --}}
+          <div class="d-flex align-items-center gap-2 mb-2 attribute-row">
+            <input name="size[]" class="form-control flex-fill col-2" placeholder="Size">
+            <input name="sku[]" class="form-control flex-fill col-2" placeholder="SKU">
+            <input name="price[]" class="form-control flex-fill col-2" placeholder="Price">
+            <input name="stock[]" class="form-control flex-fill col-2" placeholder="Stock">
+            <input name="sort[]" class="form-control flex-fill col-2" placeholder="Sort">
+            <a href="javascript:void(0);" class="btn btn-sm btn-success add_button" title="Add row"><i class="fas fa-plus"></i></a>
+          </div>
+        </div>
+        </div>
+
+        @if (isset($product['attributes']) && count($product['attributes']) > 0 )
+                <div class="mb-3">
+                  <label class="form-label mb-1">Existing Product Attributes</label>
+                  <div class="table-responsive">
+                    <table class="table table-bordered align-middle mb-0">
+                      <thead class="table-light text-center">
+                        <tr>
+                          <th style="width: 15%;">Size</th>
+                          <th style="width: 15%;">SKU</th>
+                          <th style="width: 15%;">Price</th>
+                          <th style="width: 15%;">Stock</th>
+                          <th style="width: 15%;">Sort</th>
+                          <th style="width: 15%;">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @foreach ($product['attributes'] as $attribute)
+                            <input type="hidden" name="attrId[]" value="{{$attribute['id'] }}">
+                            <tr class="text-center">
+                              <td>{{$attrtibute['size']}}</td>
+                              <td>{{$attrtibute['sku']}}</td>
+                              <td>
+                                <input type="number" name="update_price[]" value="{{ $attribute['price'] }}" class="form-control text-center" required>
+                              </td>
+                              <td>
+                                <input type="number" name="update_stock[]" value="{{ $attribute['stock'] }}" class="form-control text-center" required>
+                              </td>
+                              <td>
+                                <input type="number" name="update_sort[]" value="{{ $attribute['sort'] }}" class="form-control text-center" required>
+                              </td>
+                              <td>
+                                @if ($attribute['status'] == 1)
+                                    <a class="updateAttributeStatus text-primary me-2" id="attribute-{{$attribute['id']}}" attribute_id="{{$attribute['id']}}" href="javascript:void(0)">
+                                      <i class="fas fa-toggle-on" status="Active"></i></a>
+                                  @else
+                                  <a class="updateAttributeStatus text-primary me-2" id="attribute-{{$attribute['id']}}" attribute_id="{{$attribute['id']}}" href="javascript:void(0)">
+                                    <i class="fas fa-toggle-off" status="Inactive"></i></a>
+                                @endif
+                              </td>
+                            </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+        @endif
 
           {{-- Product main image upload field --}}
           <div class="mb-3">
