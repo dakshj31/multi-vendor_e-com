@@ -195,8 +195,8 @@
                         @foreach ($product['attributes'] as $attribute)
                             <input type="hidden" name="attrId[]" value="{{$attribute['id'] }}">
                             <tr class="text-center">
-                              <td>{{$attrtibute['size']}}</td>
-                              <td>{{$attrtibute['sku']}}</td>
+                              <td>{{$attribute['size']}}</td>
+                              <td>{{$attribute['sku']}}</td>
                               <td>
                                 <input type="number" name="update_price[]" value="{{ $attribute['price'] }}" class="form-control text-center" required>
                               </td>
@@ -214,6 +214,8 @@
                                   <a class="updateAttributeStatus text-primary me-2" id="attribute-{{$attribute['id']}}" attribute_id="{{$attribute['id']}}" href="javascript:void(0)">
                                     <i class="fas fa-toggle-off" status="Inactive"></i></a>
                                 @endif
+                                <a title="Delete Attribute" class="confirmDelete text-danger" record="attribute" recordid="{{$attribute['id']}}" href="javascript:void(0)">
+                                  <i class="fas fa-trash"></i></a>
                               </td>
                             </tr>
                         @endforeach

@@ -60,176 +60,182 @@ class ProductService
     }
 
     public function addEditProduct($request)
-    {
-        $data = $request->all();
+{
+    $data = $request->all();
 
-        if (isset($data['id']) && $data['id'] != "") {
-            $product = Product::find($data['id']);
-            $message = "Product updated successfully!";
+    if (isset($data['id']) && $data['id'] != "") {
+        $product = Product::find($data['id']);
+        $message = "Product updated successfully!";
+    } else {
+        $product = new Product;
+        $message = "Product added successfully!";
+    }
+
+    $product->admin_id = Auth::guard('admin')->user()->id;
+    $product->admin_role = Auth::guard('admin')->user()->role;
+
+    $product->category_id = $data['category_id'];
+    $product->product_name = $data['product_name'];
+    $product->product_code = $data['product_code'];
+    $product->product_color = $data['product_color'];
+    $product->family_color = $data['family_color'];
+    $product->group_code = $data['group_code'];
+    $product->product_weight = $data['product_weight'] ?? 0;
+    $product->product_price = $data['product_price'];
+    $product->product_gst = $data['product_gst'] ?? 0;
+    $product->product_discount = $data['product_discount'] ?? 0;
+    $product->is_featured = $data['is_featured'] ?? 'No';
+
+    // Calculate discount & final price
+    if (!empty($data['product_discount']) && $data['product_discount'] > 0) {
+        $product->discount_applied_on = 'product';
+        $product->product_discount_amount = ($data['product_price'] * $data['product_discount']) / 100;
+    } else {
+        $getCategoryDiscount = Category::select('discount')->where('id', $data['category_id'])->first();
+        if ($getCategoryDiscount && $getCategoryDiscount->discount > 0) {
+            $product->discount_applied_on = 'category';
+            $product->product_discount = $getCategoryDiscount->discount;
+            $product->product_discount_amount = ($data['product_price'] * $getCategoryDiscount->discount) / 100;
         } else {
-            //Add Category
-            $product = new Product;
-            $message = "Product added successfully!";
+            $product->discount_applied_on = '';
+            $product->product_discount_amount = 0;
+        }
+    }
+
+    $product->final_price = $data['product_price'] - $product->product_discount_amount;
+
+    // Optional fields
+    $product->description = $data['description'] ?? '';
+    $product->wash_care = $data['wash_care'] ?? '';
+    $product->search_keywords = $data['search_keywords'] ?? '';
+    $product->meta_title = $data['meta_title'] ?? '';
+    $product->meta_keywords = $data['meta_keywords'] ?? '';
+    $product->meta_description = $data['meta_description'] ?? '';
+    $product->status = 1;
+
+    // Main image
+    if (!empty($data['main_image_hidden'])) {
+        $sourcePath = public_path('temp/' . $data['main_image_hidden']);
+        $destinationPath = public_path('front/images/products/' . $data['main_image_hidden']);
+
+        if (file_exists($sourcePath)) {
+            @copy($sourcePath, $destinationPath);
+            @unlink($sourcePath);
         }
 
-        $product->admin_id = Auth::guard('admin')->user()->id;
-        $product->admin_role = Auth::guard('admin')->user()->role;
+        $product->main_image = $data['main_image_hidden'];
+    }
 
-        $product->category_id = $data['category_id'];
-        $product->product_name = $data['product_name'];
-        $product->product_code = $data['product_code'];
-        $product->product_color = $data['product_color'];
-        $product->family_color = $data['family_color'];
-        $product->group_code = $data['group_code'];
-        $product->product_weight = $data['product_weight'] ?? 0;
-        $product->product_price = $data['product_price'];
-        $product->product_gst = $data['product_gst'] ?? 0;
-        $product->product_discount = $data['product_discount'] ?? 0;
-        $product->is_featured = $data['is_featured'] ?? 'No';
+    // Video
+    if (!empty($data['product_video_hidden'])) {
+        $sourcePath = public_path('temp/' . $data['product_video_hidden']);
+        $destinationPath = public_path('front/videos/products/' . $data['product_video_hidden']);
 
-        // Calculate discount & final Price
-        if (!empty($data['product_discount']) && $data['product_discount'] > 0) {
-            $product->discount_applied_on = 'product';
-            $product->product_discount_amount = ($data['product_price'] * $data['product_discount']) / 100;
-        } else {
-            $getCategoryDiscount = Category::select('discount')->where('id', $data['category_id'])->first();
-            if($getCategoryDiscount && $getCategoryDiscount->discount > 0) {
-                $product->discount_applied_on = 'category';
-                $product->product_discount = $getCategoryDiscount->discount;
-                $product->product_discount_amount = ($data['product_price'] * $getCategoryDiscount->discount) / 100;
-            } else {
-                $product->discount_applied_on = '';
-                $product->product_discount_amount = 0;
-            }
+        if (file_exists($sourcePath)) {
+            @copy($sourcePath, $destinationPath);
+            @unlink($sourcePath);
         }
 
-        $product->final_price = $data['product_price'] - $product->product_discount_amount;
+        $product->product_video = $data['product_video_hidden'];
+    }
 
-        // Optional fields
-        $product->description = $data['description'] ?? '';
-        $product->wash_care = $data['wash_care'] ?? '';
-        $product->search_keywords = $data['search_keywords'] ?? '';
-        $product->meta_title = $data['meta_title'] ?? '';
-        $product->meta_keywords = $data['meta_keywords'] ?? '';
-        $product->meta_description = $data['meta_description'] ?? '';
-        $product->status = 1;
+    $product->main_image = $request->main_image ?? $product->main_image;
+    $product->product_video = $request->product_video ?? $product->product_video;
 
-        // Upload main image
-        if (!empty($data['main_image_hidden'])) {
-            $sourcePath = public_path('temp/' . $data['main_image_hidden']);
-            $destinationPath = public_path('front/images/products/' . $data['main_image_hidden']);
+    $product->save();
+
+    // Alternate images
+    if (!empty($data['product_images'])) {
+        $imageFiles = is_array($data['product_images']) ? $data['product_images'] : explode(',', $data['product_images']);
+        $imageFiles = array_filter($imageFiles);
+
+        foreach ($imageFiles as $index => $filename) {
+            $sourcePath = public_path('temp/' . $filename);
+            $destinationPath = public_path('front/images/products/' . $filename);
 
             if (file_exists($sourcePath)) {
                 @copy($sourcePath, $destinationPath);
                 @unlink($sourcePath);
             }
 
-            $product->main_image = $data['main_image_hidden'];
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image' => $filename,
+                'sort' => $index,
+                'status' => 1
+            ]);
         }
+    }
 
-        // Upload product video
-        if (!empty($data['product_video_hidden'])) {
-            $sourcePath = public_path('temp/' . $data['product_video_hidden']);
-            $destinationPath = public_path('front/videos/products/' . $data['product_video_hidden']);
+    // Product attributes
+    $total_stock = 0;
 
-            if (file_exists($sourcePath)) {
-                @copy($sourcePath, $destinationPath);
-                @unlink($sourcePath);
-            }
-
-            $product->product_video = $data['product_video_hidden'];
-        }
-
-        $product->main_image = $request->main_image ?? $product->main_image;
-        $product->product_video = $request->product_video ?? $product->product_video;
-
-        $product->save();
-
-        // upload alternate images
-        if (!empty($data['product_images'])) {
-            // ensure we have array
-            $imageFiles = is_array($data['product_images']) ? $data['product_images'] : explode(',', $data['product_images']);
-            // remove any empty values
-            $imageFiles = array_filter($imageFiles);
-
-            foreach ($imageFiles as $index => $filename) {
-                $sourcePath = public_path('temp/' . $filename);
-                $destinationPath = public_path('front/images/products/' . $filename);
-
-                if (file_exists($sourcePath)) {
-                    @copy($sourcePath, $destinationPath);
-                    @unlink($sourcePath);
-                }
-
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image' => $filename,
-                    'sort' => $index,
-                    'status' => 1
-                ]);
-            }
-        }
-
-        //Add Product Attributes
-        $total_stock = 0;
+    if (isset($data['sku'])) {
         foreach ($data['sku'] as $key => $value) {
-            if(!empty($value)&&!empty($data['size'][$key])&&!empty($data['price'][$key])) {
-                //SKU already exists check
-                $attrCountSKU = ProductsAttribute::join('products', 'products.id', '=','products_attributes.product_id')->where('sku', $value)->count();
-                if($attrCountSKU>0) {
-                    $message = "SKU already exists. Please add another SKU!";
-                    return redirect()->back()->with('success_message', $message);
+            if (!empty($value) && !empty($data['size'][$key]) && !empty($data['price'][$key])) {
+                // SKU check
+                $attrCountSKU = ProductsAttribute::where('sku', $value)->count();
+                if ($attrCountSKU > 0) {
+                    return [
+                        'status' => 'error',
+                        'message' => "SKU already exists. Please add another SKU!"
+                    ];
                 }
-                // Size already exists check
-                $attrCountSize = ProductsAttribute::join('products','products.id','=','products_attributes.product_id')->where(['product_id' =>$product->id, 'size' =>$data['size'][$key]])->count();
-                if($attrCountSize>0) {
-                    $message = "Size already exists. Please add another Size!";
-                    return redirect()->back()->with('success_message', $message);
+
+                // Size check
+                $attrCountSize = ProductsAttribute::where('product_id', $product->id)
+                    ->where('size', $data['size'][$key])
+                    ->count();
+                if ($attrCountSize > 0) {
+                    return [
+                        'status' => 'error',
+                        'message' => "Size already exists. Please add another Size!"
+                    ];
                 }
+
                 if (empty($data['stock'][$key])) {
                     $data['stock'][$key] = 0;
                 }
+
                 $attribute = new ProductsAttribute;
                 $attribute->product_id = $product->id;
                 $attribute->sku = $value;
                 $attribute->size = $data['size'][$key];
                 $attribute->price = $data['price'][$key];
-                if(!empty($data['stock'][$key])) {
-                    $attribute->stock = $data['stock'][$key];
-                }
+                $attribute->stock = $data['stock'][$key];
                 $attribute->sort = $data['sort'][$key];
                 $attribute->status = 1;
                 $attribute->save();
-                $total_stock = $total_stock + $data['stock'][$key];
+
+                $total_stock += $data['stock'][$key];
             }
         }
-
-        //Edit Product Attributes
-        if(isset($data['id']) && $data['id']!="" && isset($data['attrId'])) {
-            foreach ($data['attrId'] as $key => $attr) {
-                if(!empty($attr)) {
-                    $update_attr = [
-                        'price' => $data['update_price'][$key],
-                        'stock' => $data['update_stock'][$key],
-                        'sort' => $data['update_sort'][$key]
-                    ];
-                    ProductsAttribute::where(['id' =>$data['attrId'][$key]])->update($update_attr);
-                }
-            }
-        }
-
-        // Update Product Stockon Edit Product
-        if(isset($data['attrId'])) {
-            foreach($data['attrId'] as $attrKeyId => $attrIdDetails) {
-                $proAttrUpdate = ProductsAttribute::find($attrIdDetails);
-                $proAttrUpdate->stock = $data['update_stock'][$attrkeyId];
-                $total_stock = $total_stock + $data['update_stock'][$attrKeyId];
-            }
-        }
-        Product::where('id', $product->id)->update(['stock'=>$total_stock]);
-
-        return $message;
     }
+
+    // Edit attributes
+    if (isset($data['id']) && !empty($data['attrId'])) {
+        foreach ($data['attrId'] as $key => $attrId) {
+            if (!empty($attrId)) {
+                $update_attr = [
+                    'price' => $data['update_price'][$key],
+                    'stock' => $data['update_stock'][$key],
+                    'sort' => $data['update_sort'][$key]
+                ];
+                ProductsAttribute::where('id', $attrId)->update($update_attr);
+                $total_stock += $data['update_stock'][$key];
+            }
+        }
+    }
+
+    // Update stock
+    Product::where('id', $product->id)->update(['stock' => $total_stock]);
+
+    return [
+        'status' => 'success',
+        'message' => $message
+    ];
+}
+
 
     public function handleImageUpload($file)
     {

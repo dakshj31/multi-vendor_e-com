@@ -52,10 +52,16 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(ProductRequest $request)
-    {
-        $message = $this->productService->addEditProduct($request);
-        return redirect()->route('products.index')->with('success_message', $message);
+{
+    $result = $this->productService->addEditProduct($request);
+
+    if ($result['status'] === 'error') {
+        return redirect()->back()->with('error_message', $result['message']);
     }
+
+    return redirect()->route('products.index')->with('success_message', $result['message']);
+}
+
 
     /**
      * Display the specified resource.
@@ -79,12 +85,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, string $id)
-    {
-        $request->merge(['id'=>$id]);
-        $message = $this->productService->addEditProduct($request);
-        return redirect()->route('products.index')->with('success_message',$message);
+  public function update(ProductRequest $request, string $id)
+{
+    $request->merge(['id'=>$id]);
+    $result = $this->productService->addEditProduct($request);
+
+    if ($result['status'] === 'error') {
+        return redirect()->back()->with('error_message', $result['message']);
     }
+
+    return redirect()->route('products.index')->with('success_message', $result['message']);
+}
+
 
     /**
      * Remove the specified resource from storage.
