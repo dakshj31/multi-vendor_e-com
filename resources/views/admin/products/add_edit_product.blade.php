@@ -208,13 +208,13 @@
                               </td>
                               <td>
                                 @if ($attribute['status'] == 1)
-                                    <a class="updateAttributeStatus text-primary me-2" id="attribute-{{$attribute['id']}}" attribute_id="{{$attribute['id']}}" href="javascript:void(0)">
-                                      <i class="fas fa-toggle-on" status="Active"></i></a>
+                                    <a class="updateAttributeStatus" data-attribute-id="{{$attribute->id}}" style='color:#3f6ed3' href="javascript:void(0)">
+                                      <i class="fas fa-toggle-on" data-status="Active"></i></a>&nbsp;&nbsp;
                                   @else
-                                  <a class="updateAttributeStatus text-primary me-2" id="attribute-{{$attribute['id']}}" attribute_id="{{$attribute['id']}}" href="javascript:void(0)">
-                                    <i class="fas fa-toggle-off" status="Inactive"></i></a>
+                                  <a class="updateAttributeStatus" data-attribute-id="{{$attribute->id}}" style='color:grey' href="javascript:void(0)">
+                                    <i class="fas fa-toggle-off" data-status="Inactive"></i></a>&nbsp;&nbsp;
                                 @endif
-                                <a title="Delete Attribute" class="confirmDelete text-danger" record="attribute" recordid="{{$attribute['id']}}" href="javascript:void(0)">
+                                <a title="Delete Attribute" class="confirmDelete text-danger" data-module="product-attribute" data-id="{{$attribute['id']}}" href="javascript:void(0)">
                                   <i class="fas fa-trash"></i></a>
                               </td>
                             </tr>

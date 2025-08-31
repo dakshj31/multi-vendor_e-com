@@ -166,4 +166,19 @@ class ProductController extends Controller
         $message = $this->productService->deleteProductImage($id);
         return redirect()->back()->with('success_message', $message);
     }
+
+    public function updateAttributeStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            $status = $this->productService->updateAttributeStatus($data);
+            return response()->json(['status' => $status, 'attribute_id' => $data['attribute_id']]);
+        }
+    }
+
+    public function deleteProductAttribute($id) 
+    {
+        $message = $this->productService->deleteProductAttribute($id);
+        return redirect()->back()->with('success_message', $message);
+    }
 }

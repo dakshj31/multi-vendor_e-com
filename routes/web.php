@@ -64,6 +64,12 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::post('/product/upload-video', [ProductController::class, 'uploadVideo'])->name('product.upload.video');
  Route::get('delete-product-main-image/{id?}', [ProductController::class, 'deleteProductMainImage']);
  Route::get('delete-product-video/{id}', [ProductController::class, 'deleteProductVideo']);
+
+   // Product Attributes
+ Route::post('update-attribute-status', [ProductController::class, 'updateAttributeStatus']);
+ Route::delete('delete-product-attribute/{id}', [ProductController::class, 'deleteProductAttribute']);
+
+
      
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    

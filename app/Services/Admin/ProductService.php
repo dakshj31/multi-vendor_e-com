@@ -318,4 +318,24 @@ class ProductService
         $message = "Product Video has been deleted successfully!";
         return $message;
     }
+
+    public function updateAttributeStatus($data)
+    {
+        $status = ($data['status'] == "Active") ? 0 : 1;
+        ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]);
+        return $status;
+    }
+
+    public function deleteProductAttribute($id)
+{
+    $attribute = ProductsAttribute::find($id);
+
+    if ($attribute) {
+        $attribute->delete();
+        return redirect()->back()->with('success', 'Product Attribute has been deleted successfully!');
+    }
+
+    return redirect()->back()->with('error', 'Product Attribute not found!');
+}
+
 }
