@@ -256,12 +256,12 @@
                 {{-- Container for sortable images --}}
                 <div id="sortable-images" class="sortable-wrapper d-flex gap-2 overflow-auto">
                   @foreach ($product->product_images as $img)
-                      <div class="sortable-item" data-id="{{ $img->id }}">
+                      <div class="sortable-item" data-id="{{ $img->id }}" style="position: relative; display: inline-block;">
                         <a target="_blank" href="{{ url('front/images/products/' . $img->image) }}">
                         <img src="{{asset('front/images/products/' . $img->image) }}" style="width:50px;"></a>
                         <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{ $img->id }}"
                           data-image="{{ $img->image }}"> 
-                        <i class="fas fa-trash" style="position: absolute;right:0;color:red;"></i></a>
+                        <i class="fas fa-trash" style="position: absolute;top:0;right:0;color:red;"></i></a>
                       </div>
                   @endforeach
                 </div>

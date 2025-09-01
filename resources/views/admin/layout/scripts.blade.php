@@ -361,7 +361,7 @@
       });
 
       //Product Image Sort Script
-      $("#sortable-images").Sortable({
+      $("#sortable-images").sortable({
         helper: 'clone',
         placeholder: "sortable-placeholder",
         forcePlaceholderSize: true,
