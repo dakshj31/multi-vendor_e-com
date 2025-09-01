@@ -228,6 +228,10 @@
     {{-- jquery --}}
     <script src="{{ url('admin/js/jquery-3.7.1.min.js') }}"></script>
 
+    {{-- jquery UI --}}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
     {{-- custom script --}}
     <script src="{{ url('admin/js/custom.js') }}"></script>
 
@@ -352,6 +356,32 @@
           this.on("maxfilesexceeded", function(file) {
             this.removeAllFiles();
             this.addFile(file);
+          });
+        }
+      });
+
+      //Product Image Sort Script
+      $("#sortable-images").Sortable({
+        helper: 'clone',
+        placeholder: "sortable-placeholder",
+        forcePlaceholderSize: true,
+        scroll: true,
+        axis: 'x', // restrict to horizontal only
+        update: function(event, ui) {
+          let sortedIds = [];
+          $('#sortable-images .sortable-item').each(function (index) {
+            sortedIds.push({
+              id: $(this).data('id'),
+              sort: index
+            });
+          });
+          $.ajax ({
+            url: "{{ route('admin.products.update-image-sorting') }}",
+            method: "POST",
+            data: {
+              _token: "{{csrf_token() }}",
+              sorted_images: sortedIds
+            }
           });
         }
       });

@@ -247,14 +247,24 @@
             </label>
             <div class="dropzone" id="productImagesDropzone"></div>
             @if (isset($product->product_images) && $product->product_images->count() > 0)
-                @foreach ($product->product_images as $img)
-                    <div style="display:inline-block; position:relative; margin:5px;">
-                      <a href="{{ url('front/images/products/' . $img->image) }}" target="_blank">
-                      <img src="{{asset('front/images/products/' . $img->image)}}" style="width:50px;"></a>
-                      <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{$img->id}}"
-                        data-image="{{$img->image}}"><i class="fas fa-trash" style="position:absolute;top:0;right:0;color:red;"></i></a>
-                    </div>
-                @endforeach
+                @if ($product->product_images->count() > 1)
+                    {{-- Instruction line --}}
+                    <p class="drag-instruction">
+                      <i class="fas fa-arrows-alt"></i> Drag and drop below images to reorder them
+                    </p>
+                @endif
+                {{-- Container for sortable images --}}
+                <div id="sortable-images" class="sortable-wrapper d-flex gap-2 overflow-auto">
+                  @foreach ($product->product_images as $img)
+                      <div class="sortable-item" data-id="{{ $img->id }}">
+                        <a target="_blank" href="{{ url('front/images/products/' . $img->image) }}">
+                        <img src="{{asset('front/images/products/' . $img->image) }}" style="width:50px;"></a>
+                        <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{ $img->id }}"
+                          data-image="{{ $img->image }}"> 
+                        <i class="fas fa-trash" style="position: absolute;right:0;color:red;"></i></a>
+                      </div>
+                  @endforeach
+                </div>
             @endif
             {{-- Hidden input to collect alternate images --}}
             <input type="hidden" name="product_images" id="product_images_hidden">

@@ -181,4 +181,10 @@ class ProductController extends Controller
         $message = $this->productService->deleteProductAttribute($id);
         return redirect()->back()->with('success_message', $message);
     }
+
+    public function updateImageSorting(Request $request)
+    {
+        $this->productService->updateImageSorting($request->sorted_images);
+        return response()->json(['status' => 'success']);
+    }
 }

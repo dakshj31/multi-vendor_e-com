@@ -338,4 +338,15 @@ class ProductService
     return redirect()->back()->with('error', 'Product Attribute not found!');
 }
 
+public function updateImageSorting(array $sortedImages): void
+{
+    foreach ($sortedImages as $imageData) {
+        if (isset($imageData['id']) && isset($imageData['sort'])) {
+            ProductsImage::where('id', $imageData['id'])->update([
+                'sort' => $imageData['sort']
+            ]);
+        }
+    }
+}
+
 }

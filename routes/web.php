@@ -64,6 +64,7 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::post('/product/upload-video', [ProductController::class, 'uploadVideo'])->name('product.upload.video');
  Route::get('delete-product-main-image/{id?}', [ProductController::class, 'deleteProductMainImage']);
  Route::get('delete-product-video/{id}', [ProductController::class, 'deleteProductVideo']);
+ Route::post('/products/update-image-sorting', [ProductController::class, 'updateImageSorting'])->name('admin.products.update-image-sorting');
 
    // Product Attributes
  Route::post('update-attribute-status', [ProductController::class, 'updateAttributeStatus']);
