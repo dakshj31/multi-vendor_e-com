@@ -238,8 +238,8 @@
                 <img src="{{asset('front/images/products/'.$product['main_image'])}}" style="width:50px; margin:10px;"></a>
                 <a href="javascript:void(0)" style='color:#3f6ed3;' class="confirmDelete" title="Delete Product Image" data-module="product-main-image" data-id="{{$product['id']}}"><i class="fas fa-trash"></i></a>
             @endif
-           
           </div>
+          <div id="mainImageDropzoneError" style="color: red; display: none;"></div>
 
           <div class="mb-3">
             <label for="product_images_dropzone" class="form-label">

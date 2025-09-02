@@ -349,4 +349,14 @@ public function updateImageSorting(array $sortedImages): void
     }
 }
 
+public function deleteDrozoneImage(string $imageName): bool {
+    $imagePath = public_path('front/images/products/'.$imageName);
+    return file_exists($imagePath) ? unlink($imagePath): false;
+}
+
+public function deleteDrozoneVideo(string $videoName): bool {
+    $videoPath = public_path('front/videos/products/'.$videoName);
+    return file_exists($videoPath) ? unlink($videoPath): false;
+}
+
 }

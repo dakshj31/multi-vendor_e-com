@@ -270,10 +270,52 @@
           'X-CSRF-TOKEN': "{{ csrf_token() }}"
         },
         success: function (file, response) {
+          // store file name to refrence it during deletion
+          file.uploadedFileName = response.fileName;
           document.getElementById('main_image_hidden').value = response.fileName;
         },
+        removeFile:function (file) {
+          //optinal:check if the file was successfully uploaded
+          if (file.uploadedFileName) {
+            $.ajax({
+              url: "{{route('admin.products.delete-image')}}",
+              type:'POST',
+              data: {
+                _token: "{{ csrf_token()}}",
+                image: file.uploadedFileName
+              },
+              success: function (response) {
+                console.log("Main image deleted successfully");
+                // clear hidden field if the image is removed
+                document.getElementById('main_image_hidden').value='';
+              },
+              error:function() {
+                console.log("Error deleting main image");
+              }
+            });
+          }
+          // Remove preview from Dropzone UI
+          var previewElement = file.previewElement;
+          if (previewElement !==null) {
+            previewElement.parentNode.removeChild(previewElement);
+          }
+        },
         error: function (file, message) {
-          alert(message);
+          // Prevent multiple alerts for the same file
+          if (!file.alreadyRejected) {
+            file.alreadyRejected = true;
+            // Show error message in the container instead of using alert()
+            let errorContainer = document.getElementById('mainImageDropzoneError');
+            if (errorContainer) {
+              errorContainer.innertext = typeof message === 'string' ? message :
+              message.message;
+              errorContainer.style.display = 'block';
+              // Hide after 4 second
+              setTimeout(() => {
+                errorContainer.style.display = 'none';
+              }, 4000);
+            }
+          }
           this.removeFile(file);
         },
         init: function () {
@@ -302,24 +344,14 @@
             // Append filename to hidden input
             let hiddenInput = document.getElementById('product_images_hidden');
             let currentVal = hiddenInput.value;
-
-            if (currentVal === '') {
-              hiddenInput.value = response.fileName;
-            } else {
-              hiddenInput.value = currentVal + ',' + response.fileName;
-            }
+            hiddenInput.value = currentVal ? currentVal + ',' + response.fileName : response.fileName;
             file.uploadedFileName = response.fileName;
           });
 
           this.on("removedfile", function(file) {
             if (file.uploadedFileName) {
               let hiddenInput = document.getElementById('product_images_hidden');
-              let currentVal = hiddenInput.value;
-              let files = currentVal.split(',');
-
-              files = files.filter(name => name !== file.uploadedFileName);
-              hiddenInput.value = files.join(',');
-
+              hiddenInput.value = hiddenInput.value.split(',').filter(name => name !== file.uploadedFileName).join(',');
               //optional: delete the file from sever
               $.ajax({
                 url: "{{route('product.delete.temp.image')}}",
@@ -347,10 +379,22 @@
         },
         success: function (file, response) {
           document.getElementById('product_video_hidden').value = response.fileName;
+          file.uploadedFileName = response.fileName;
         },
-        error: function (file, message) {
-          alert(message);
-          this.removeFile(file);
+        removedFile:function (file) {
+          if (file.uploadedFileName) {
+            document.getElementById('product_video_hidden').value = '';
+            $.ajax({
+              url: "{{route('product.delete.temp.video')}}",
+              type:'POST',
+              data: {fileName:file.uploadedFileName},
+              headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+          }
+          let previewElement = file.previewElement;
+          if (previewElement !== null) {
+            previewElement.parentNode.removeChild(previewElement);
+          }
         },
         init: function () {
           this.on("maxfilesexceeded", function(file) {
