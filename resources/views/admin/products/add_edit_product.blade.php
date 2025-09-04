@@ -235,7 +235,7 @@
 
             @if (!empty($product['main_image']))
                 <a target="_blank" href="{{url('front/images/products/'.$product['main_image'])}}">
-                <img src="{{asset('front/images/products/'.$product['main_image'])}}" style="width:50px; margin:10px;"></a>
+                <img src="{{url('product-image/thumbnail/' .$product->main_image) }}" style="width:50px; margin:10px;"></a>
                 <a href="javascript:void(0)" style='color:#3f6ed3;' class="confirmDelete" title="Delete Product Image" data-module="product-main-image" data-id="{{$product['id']}}"><i class="fas fa-trash"></i></a>
             @endif
           </div>
@@ -258,7 +258,7 @@
                   @foreach ($product->product_images as $img)
                       <div class="sortable-item" data-id="{{ $img->id }}" style="position: relative; display: inline-block;">
                         <a target="_blank" href="{{ url('front/images/products/' . $img->image) }}">
-                        <img src="{{asset('front/images/products/' . $img->image) }}" style="width:50px;"></a>
+                        <img src="{{url('product-image/thumbnail/' . $img->image) }}" style="width:50px;"></a>
                         <a href="javascript:void(0)" class="confirmDelete" data-module="product-image" data-id="{{ $img->id }}"
                           data-image="{{ $img->image }}"> 
                         <i class="fas fa-trash" style="position: absolute;top:0;right:0;color:red;"></i></a>
