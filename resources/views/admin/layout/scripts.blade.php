@@ -236,13 +236,56 @@
     <script src="{{ url('admin/js/custom.js') }}"></script>
 
     {{-- Datatable --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+      <!--DataTables Css -->
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+      <!--ColReorder Css -->
+      <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.6.2/css/colReorder.dataTables.min.css">
+
+      {{-- <!--jQuery -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
+      <!--DataTables JS -->
+      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+      <!--ColReorder JS -->
+      <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+
     <script>
       $(document).ready(function(){
-        $("#categories").DataTable();
-        $("#subadmins").DataTable();
-        $("#products").DataTable();
+        // $("#categories").DataTable();
+        
+        // Inject PHP data into JS safely
+        let categoriesSavedOrder = {!! $categoriesSavedOrder ?? 'null' !!};
+        let productsSavedOrder = {!! $productsSavedOrder ?? 'null' !!};
+
+        // Initialize Categories DataTable
+        let categoriesTable = $("#categories").DataTable({
+          order: [[0, "desc"]],
+          colReorder: {
+            order: categoriesSavedOrder
+          },
+          stateSave: false
+        });
+
+        // Handle column reorder for Ctegories
+          categoriesTable.on('column-reorder', function () {
+            let columnOrder = categoriesTable.colReorder.order();
+            $.ajax({
+              url: "{{ url('admin/save-column-order') }}",
+              type: "POST",
+              data: {
+                _token: "{{ csrf_token() }}",
+                table_key: "categories",
+                column_order: columnOrder
+              },
+              success: function (response) {
+                console.log("Product column order saved:", response);
+              }
+            });
+          });
+
       });
     </script>
 

@@ -94,6 +94,9 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::post('update-attribute-status', [ProductController::class, 'updateAttributeStatus']);
  Route::delete('delete-product-attribute/{id}', [ProductController::class, 'deleteProductAttribute']);
 
+   // Save Column Orders
+ Route::post('/save-column-order', [AdminController::class, 'saveColumnOrder']);
+
 
      
     // Admin Logout

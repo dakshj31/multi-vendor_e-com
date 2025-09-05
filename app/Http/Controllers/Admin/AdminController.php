@@ -12,6 +12,7 @@ use App\Http\Requests\Admin\SubadminRequest;
 use App\Http\Requests\Admin\DetailRequest;
 use App\Http\Requests\Admin\PasswordRequest;
 use App\Services\Admin\AdminServices;
+use App\Models\ColumnPreference;
 use Session;
 
 class AdminController extends Controller
@@ -188,5 +189,19 @@ class AdminController extends Controller
             $result = $service->updateRole($request);
             return redirect()->back()->with('success_message', $result['message']);
         }
+    }
+
+    public function saveColumnOrder(Request $request)
+    {
+        $userId = Auth::guard('admin')->id();
+        $tableName = $request->table_key;
+            if (!$tableName) {
+                return response()->json(['status' => 'error', 'message' => 'Table Key is required.'], 400);
+            }
+            ColumnPreference::updateOrCreate(
+                ['admin_id' => $userId, 'table_name' => $tableName],
+                ['column_order' => json_encode($request->column_order)]
+            );
+            return response()->json(['status' => 'success']);
     }
  }

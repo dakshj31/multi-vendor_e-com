@@ -9,6 +9,7 @@ use App\Services\Admin\ProductService;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\Product; 
+use App\Models\ColumnPreference;
 use Session;
 
 class ProductController extends Controller
@@ -32,9 +33,15 @@ class ProductController extends Controller
         if($result['status'] == "error") {
             return redirect('admin/dashboard')->with('error_message', $result['message']);
         }
+
+        $productsSavedOrder = ColumnPreference::where('admin_id', Auth::guard('admin')->id())
+        ->where('table_name', 'products')
+        ->value('column_order');
+
         return view('admin.products.index', [
             'products' => $result['products'],
-            'productsModule' => $result['productsModule']
+            'productsModule' => $result['productsModule'],
+            'productsSavedOrder' => $productsSavedOrder
         ]);
     }
 
