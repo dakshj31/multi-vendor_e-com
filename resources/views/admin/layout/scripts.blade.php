@@ -243,6 +243,9 @@
       <!--ColReorder Css -->
       <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.6.2/css/colReorder.dataTables.min.css">
 
+      <!---Buttons CSS -->
+      <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
       {{-- <!--jQuery -->
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
@@ -252,40 +255,77 @@
       <!--ColReorder JS -->
       <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
 
+      <!---Buttons Extension -->
+      <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+      <!---Column Visibility -->
+      <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
     <script>
       $(document).ready(function(){
-        // $("#categories").DataTable();
+         $("#subadmins").DataTable();
         
-        // Inject PHP data into JS safely
-        let categoriesSavedOrder = {!! $categoriesSavedOrder ?? 'null' !!};
-        let productsSavedOrder = {!! $productsSavedOrder ?? 'null' !!};
-
-        // Initialize Categories DataTable
-        let categoriesTable = $("#categories").DataTable({
-          order: [[0, "desc"]],
-          colReorder: {
-            order: categoriesSavedOrder
+        const tablesConfig = [
+          {
+            id: "categories",
+            savedOrder: {!! json_encode($categoriesSavedOrder ?? null) !!},
+            hiddenCols: {!! json_encode($categoriesHiddenCols ?? []) !!},
+            tableName: "categories"
           },
-          stateSave: false
-        });
-
-        // Handle column reorder for Ctegories
-          categoriesTable.on('column-reorder', function () {
-            let columnOrder = categoriesTable.colReorder.order();
-            $.ajax({
-              url: "{{ url('admin/save-column-order') }}",
-              type: "POST",
-              data: {
-                _token: "{{ csrf_token() }}",
-                table_key: "categories",
-                column_order: columnOrder
+          {
+            id: "products",
+            savedOrder: {!! json_encode($productsSavedOrder ?? null) !!},
+            hiddenCols: {!! json_encode($productsHiddenCols ?? []) !!},
+            tableName: "products"
+          }
+        ];
+        tablesConfig.forEach(config => {
+          const tableElement = $("#" + config.id);
+          if (tableElement.length > 0) {
+            let dataTable = tableElement.DataTable({
+              order: [[0, "desc"]],
+              colReorder: {
+                order: config.savedOrder
               },
-              success: function (response) {
-                console.log("Product column order saved:", response);
-              }
+              dom: 'Bfrtip',
+              buttons: ['colvis'],
+              columnDefs: config.hiddenCols.map(index => ({
+                targets: parseInt(index),
+                visible: false
+              }))
             });
+            dataTable.on('column-reorder', function () {
+              savePreference(config.tableName, dataTable.colReorder.order(),
+              getHiddenColumnIndexes(dataTable));
+            });
+            dataTable.on('column-visibility.dt', function () {
+              savePreference(config.tableName, dataTable.colReorder.order(),
+              getHiddenColumnIndexes(dataTable));
+            });
+          }
+        });
+        function getHiddenColumnIndexes(dataTable) {
+          let hidden = [];
+          dataTable.columns().every(function (index) {
+            if (!this.visible()) hidden.push(index);
           });
-
+          return hidden;
+        }
+        function savePreference(tableName, columnOrder, hiddenCols) {
+          $.ajax({
+            url: "{{ url('admin/save-column-visibility') }}",
+            type: "POST",
+            data: {
+                  _token: "{{ csrf_token() }}",
+                  table_key: tableName,
+                  column_order: columnOrder,
+                  hidden_columns: hiddenCols
+            },
+            success: function (response) {
+                console.log("Preference saved for " + tableName + ":", response);
+            }
+          });
+        }
       });
     </script>
 
