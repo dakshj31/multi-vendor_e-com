@@ -264,6 +264,7 @@
     <script>
       $(document).ready(function(){
          $("#subadmins").DataTable();
+         $("#brands").DataTable();
         
         const tablesConfig = [
           {

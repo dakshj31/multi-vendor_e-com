@@ -11,7 +11,7 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                  <li class="breadcrumb-item active" aria-current="page">Brands</li>
                 </ol>
               </div>
             </div>
@@ -23,9 +23,9 @@
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h3 class="card-title">Categories</h3>
-                            @if ($categoriesModule['edit_access']==1 || $categoriesModule['full_access']==1)
-                            <a style="max-width:150px;float: right; display: inline-block;" href="{{ url('admin/categories/create') }}" class="btn btn-block btn-primary">Add Category</a>
+                            <h3 class="card-title">Brands</h3>
+                            @if ($brandsModule['edit_access']==1 || $brandsModule['full_access']==1)
+                            <a style="max-width:150px;float: right; display: inline-block;" href="{{ url('admin/brands/create') }}" class="btn btn-block btn-primary">Add Brand</a>
                             @endif
                         </div>
                         <div class="card-body">
@@ -35,45 +35,43 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           @endif
-                            <table id="categories" class="table table-bordered table-striped">
+                            <table id="brands" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Parent Category</th>
                                         <th>URL</th>
                                         <th>Creatod On</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categories as $category)
+                                    @foreach ($brands as $brand)
                                         <tr>
-                                            <td>{{$category->id}}</td>
-                                            <td>{{$category->name}}</td>
-                                            <td>{{$category->parentcategory->name ?? ''}}</td>
-                                            <td>{{$category->url}}</td>
-                                            <td>{{$category->created_at->format('F j, Y, g:i a') }}</td>
+                                            <td>{{$brand->id}}</td>
+                                            <td>{{$brand->name}}</td>
+                                            <td>{{$brand->url}}</td>
+                                            <td>{{$brand->created_at->format('F j, Y, g:i a') }}</td>
                                             <td>
-                                                @if ($categoriesModule['edit_access']==1 || $categoriesModule['full_access']==1)
+                                                 @if ($brandsModule['edit_access']==1 || $brandsModule['full_access']==1)
                                                 {{-- actions enable/diasble edit,delte will be added here --}}
-                                                @if ($category->status == 1)
-                                                    <a class="updateCategoryStatus" data-category-id="{{$category->id}}"
+                                                @if ($brand->status == 1)
+                                                    <a class="updateBrandStatus" data-brand-id="{{$brand->id}}"
                                                          style="color:3f6ed3" href="javascript:void(0)"><i class="fas fa-toggle-on" data-status="Active"></i></a>
                                                 @else
-                                                    <a class="updateCategoryStatus" data-category-id="{{$category->id}}"
+                                                    <a class="updateBrandStatus" data-brand-id="{{$brand->id}}"
                                                          style="color:grey" href="javascript:void(0)"><i class="fas fa-toggle-off" data-status="Inactive"></i></a>
                                                 @endif
                                                 &nbsp;&nbsp;
-                                                @if ($categoriesModule['edit_access']==1 || $categoriesModule['full_access']==1)
-                                                <a href="{{ url('admin/categories/'.$category->id.'/edit') }}">
+                                                @if ($brandsModule['edit_access']==1 || $brandsModule['full_access']==1)
+                                                <a href="{{ url('admin/brands/'.$brand->id.'/edit') }}">
                                                 <i class="fas fa-edit"></i></a>
                                                 &nbsp;&nbsp;
                                                 @endif
-                                                @if ($categoriesModule['full_access']==1)
-                                                <form action="{{route('categories.destroy',$category->id) }}" method="POST" 
+                                                @if ($brandsModule['full_access']==1)
+                                                <form action="{{route('brands.destroy',$brand->id) }}" method="POST" 
                                                     style="display:inline-block;">@csrf @method('DELETE')
-                                                    <button type="button" class="confirmDelete" name="Category" style="border:none; background:none; color:#3f6ed3;" href="javascript:void(0)" data-module="category" data-id="{{ $category->id }}" title="Delete Category">
+                                                    <button type="button" class="confirmDelete" name="Brand" style="border:none; background:none; color:#3f6ed3;" href="javascript:void(0)" data-module="brand" data-id="{{ $brand->id }}" title="Delete Brand">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>

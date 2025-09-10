@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BrandController;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Response;
 
@@ -98,7 +99,9 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
 //  Route::post('/save-column-order', [AdminController::class, 'saveColumnOrder']);
  Route::post('/save-column-visibility', [AdminController::class, 'saveColumnVisibility']);
 
-
+   // Brands
+ Route::resource('brands', BrandController::class);
+ Route::post('update-brand-status', [BrandController::class, 'updateBrandStatus']);
      
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    
