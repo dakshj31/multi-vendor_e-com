@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\BrandService;
 use App\Models\Brand;
+use App\Http\Requests\Admin\BrandRequest;
 use Session;
 
 class BrandController extends Controller
@@ -48,7 +49,7 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
         $message = $this->brandService->addEditBrand($request);
         return redirect()->route('brands.index')->with('success_message', $message);
@@ -76,7 +77,7 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BrandRequest $request, string $id)
     {
         $request->merge(['id' => $id]);
         $message = $this->brandService->addEditBrand($request);
