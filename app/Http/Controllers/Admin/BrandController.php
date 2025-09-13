@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\BrandService;
+use App\Models\Brand;
 use Session;
 
 class BrandController extends Controller
@@ -40,7 +41,8 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Add Brand';
+        return view('admin.brands.add_edit_brand', compact('title'));
     }
 
     /**
@@ -48,7 +50,8 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $message = $this->brandService->addEditBrand($request);
+        return redirect()->route('brands.index')->with('success_message', $message);
     }
 
     /**
@@ -64,7 +67,10 @@ class BrandController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = 'Edit Brand';
+        $brand = Brand::findOrFail($id);
+        // $getCategories = Category::getCategories('Admin');
+        return view('admin.brands.add_edit_brand', compact('title', 'brand'));
     }
 
     /**
@@ -72,7 +78,9 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->merge(['id' => $id]);
+        $message = $this->brandService->addEditBrand($request);
+        return redirect()->route('brands.index')->with('success_message', $message);
     }
 
     /**

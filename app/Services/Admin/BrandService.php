@@ -4,6 +4,9 @@ namespace App\Services\Admin;
 use App\Models\Brand;
 use App\Models\AdminsRole;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Laravel\Facades\Image;
 
 class BrandService {
 
@@ -42,6 +45,81 @@ class BrandService {
         "status" => $status,
         "message" => $message
     ];
+    }
+
+    public function addEditBrand($request) 
+    {
+         $data = $request->all();
+
+        if (isset($data['id']) && $data['id'] != "") {
+            //Edit Brand
+            $brand = Brand::find($data['id']);
+            $message = "Brand updated successfully!";
+        } else {
+            //Add Brand
+            $brand = new Brand;
+            $message = "Brand added successfully!";
+        }
+
+        //Upload Brand Image
+        if ($request->hasFile('image')) {
+            $image_tmp = $request->file('image');
+            if ($image_tmp->isValid()) {
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($image_tmp);
+                $extension = $image_tmp->getClientOriginalExtension();
+                $imageName = rand(111, 99999) . '.' . $extension;
+                $image_path = 'front/images/brands/' . $imageName;
+                $image->save($image_path);
+                $brand->image = $imageName;
+            }
+        }
+
+        //Upload Brand Logo
+        if ($request->hasFile('logo')) {
+            $sizechart_tmp = $request->file('logo');
+            if ($sizechart_tmp->isValid()) {
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($sizechart_tmp);
+                $sizechart_extension = $sizechart_tmp->getClientOriginalExtension();
+                $sizechartimageName = rand(111, 99999) . '.' . $sizechart_extension;
+                $sizechart_image_path = 'front/images/logos/' . $sizechartimageName;
+                $image->save($sizechart_image_path);
+                $brand->logo = $sizechartimageName;
+            }
+        }
+
+        //Format name and URL
+        $data['name'] = str_replace("-", " ", ucwords(strtolower($data['name'])));
+        $data['url'] = str_replace(" ", "-", strtolower($data['url']));
+
+        $brand->name = $data['name'];
+
+        //Discount default
+        if (empty($data['brand_discount'])) {
+            $data['brand_discount'] = 0;
+        }
+
+        $brand->discount = $data['brand_discount'];
+        $brand->description = $data['description'];
+        $brand->url = $data['url'];
+        $brand->meta_title = $data['meta_title'];
+        $brand->meta_description = $data['meta_description'];
+        $brand->meta_keywords = $data['meta_keywords'];
+
+        //Menu Status
+        if (!empty($data['menu_status'])) {
+            $brand->menu_status = 1;
+        } else {
+            $brand->menu_status = 0;
+        }
+
+        //Status default
+        $brand->status = 1;
+
+        $brand->save();
+
+        return $message;
     }
     
     public function updateBrandStatus($data)
