@@ -99,6 +99,16 @@
         </div>
 
         <div class="mb-3">
+          <label class="form-label" for="brand_id">Brand*</label>
+          <select name="brand_id" class="form-control">
+            <option value="">Select</option>
+            @foreach ($brands as $brand)
+                <option value="{{ $brand['id'] }}" {{old('brand_id', $product['brand_id'] ?? '') == $brand['id'] ? 'selected' : ''}}>{{ $brand['name'] }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label for="product_name" class="form-label">Product Name*</label>
           <input type="text" class="form-control" id="product_name" name="product_name" value="{{old('product_name', $product->product_name ?? '')}}" placeholder="Enter Product Name">
         </div>

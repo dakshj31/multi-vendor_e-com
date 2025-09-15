@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\Admin\ProductService;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
+use App\Models\Brand;
 use App\Models\Product; 
 use App\Models\ColumnPreference;
 use Session;
@@ -59,7 +60,9 @@ class ProductController extends Controller
     {
         $title='Add Product';
         $getCategories = Category::getCategories('Admin');
-        return view('admin.products.add_edit_product',compact('title','getCategories'));
+        // Get All Active Brands
+        $brands = Brand::where('status', 1)->get()->toArray();
+        return view('admin.products.add_edit_product',compact('title','getCategories', 'brands'));
     }
 
     /**
@@ -93,7 +96,9 @@ class ProductController extends Controller
         $title = 'Edit Product';
         $product = Product::with('product_images', 'attributes')->findOrfail($id);
         $getCategories = Category::getCategories('Admin');
-        return view('admin.products.add_edit_product',compact('title', 'product', 'getCategories'));
+        // Get All Active Brands
+        $brands = Brand::where('status', 1)->get()->toArray();
+        return view('admin.products.add_edit_product',compact('title', 'product', 'getCategories', 'brands'));
     }
 
     /**

@@ -23,6 +23,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'category_id' => 'required',
+            'brand_id' => 'required',
             'product_name' => 'required|max:200',
             'product_code' => 'required|max:30',
             'product_price' => 'required|numeric|gt:0',
@@ -35,6 +36,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'category_id.required' => 'Category is required',
+            'brand_id.required' => 'Brand is required',
             'product_name.required' => 'Product Name is required',
             'product_code.required' => 'Product Code is required',
             'product_price.required' => 'Product Price is required',
