@@ -15,7 +15,7 @@ class ProductsAttributesTableSeeder extends Seeder
     {
         $productAttributesRecords = [
             [
-                'product_id' => 3,
+                'product_id' => 1,
                 'sku' => 'BTS001-S',
                 'size' => 'Small',
                 'price' => 1500,
@@ -24,7 +24,7 @@ class ProductsAttributesTableSeeder extends Seeder
                 'status' => 1
             ],
             [
-                'product_id' => 3,
+                'product_id' => 1,
                 'sku' => 'BTS001-M',
                 'size' => 'Medium',
                 'price' => 1600,
@@ -33,8 +33,8 @@ class ProductsAttributesTableSeeder extends Seeder
                 'status' => 1
             ],
             [
-                'product_id' => 3,
-                'sku' => 'BTS001-',
+                'product_id' => 1,
+                'sku' => 'BTS001-L',
                 'size' => 'Large',
                 'price' => 1700,
                 'stock' => 10,
