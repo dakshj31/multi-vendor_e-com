@@ -1,3 +1,7 @@
+<?php 
+use App\Models\Category;
+$categories = Category::getCategories('Front');
+ ?>
 <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-2 px-xl-5">
@@ -76,22 +80,25 @@
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
                      id="navbar-vertical" style="width: calc(100% - 30px); z-index: 9;">
                     <div class="navbar-nav w-100">
+                        @foreach ($categories as $category)
+                            @if ($category['menu_status'] == 1)
+                            @if (count($category['subcategories']) > 0)
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Clothing <i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <a href="{{ url($category['url']) }}" class="nav-link" data-toggle="dropdown">{{ $category['name'] }}<i class="fa fa-angle-down float-right mt-1"></i></a>
                             <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                <a href="" class="dropdown-item">Men</a>
-                                <a href="" class="dropdown-item">Women</a>
-                                <a href="" class="dropdown-item">Kids</a>
+                                @foreach ($category['subcategories'] as $subcategory)
+                                    @if ($subcategory['menu_status'] == 1)
+                                        <a href="{{url($subcategory['url'])}}" class="dropdown-item">{{$subcategory['name']}}</a>
+                                    @endif
+                                @endforeach
+                                
                             </div>
                         </div>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Electronics <i class="fa fa-angle-down float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                <a href="" class="dropdown-item">Laptops</a>
-                                <a href="" class="dropdown-item">Mobiles</a>
-                            </div>
-                        </div>
-                        <a href="" class="nav-item nav-link">Appliances</a>
+                        @else
+                        <a href="{{url($category['url'])}}" class="nav-item nav-link">{{$category['name']}}</a>
+                        @endif 
+                        @endif
+                        @endforeach
                     </div>
                 </nav>
             </div>
@@ -109,20 +116,55 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto py-0">
-                            <a href="index.html" class="nav-item nav-link">Home</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Clothing</a>
-                                <div class="dropdown-menu rounded-0 m-0">
-                                    <a href="#" class="dropdown-item">Men</a>
-                                    <a href="#" class="dropdown-item">Women</a>
-                                    <a href="#" class="dropdown-item">Kids</a>
-                                </div>
-                            </div>
-                            <a href="#" class="nav-item nav-link">Electronics</a>
-                            <a href="#" class="nav-item nav-link">Appliances</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        </div>
+                       <div class="navbar-nav mr-auto py-0">
+    <a href="{{ url('/') }}" class="nav-item nav-link">Home</a>
+    @foreach ($categories as $category)
+        @if ($category['menu_status'] == 1)
+            @if (count($category['subcategories']) > 0)
+                <div class="nav-item dropdown">
+                    <a href="{{ url($category['url']) }}" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        {{ $category['name'] }}
+                    </a>
+                    <div class="dropdown-menu rounded-0 m-0">
+                        @foreach ($category['subcategories'] as $subcategory)
+                            @if ($subcategory['menu_status'] == 1)
+                                @if (count($subcategory['subcategories']) > 0)
+                                    <div class="dropdown-submenu">
+                                        <a href="{{ url($subcategory['url']) }}" class="dropdown-item">
+                                            {{ $subcategory['name'] }}
+                                            <i class="fa fa-angle-right float-right mt-1"></i>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            @foreach ($subcategory['subcategories'] as $subsubcategory)
+                                                @if ($subsubcategory['menu_status'] == 1)
+                                                    <a href="{{ url($subsubcategory['url']) }}" class="dropdown-item">
+                                                        {{ $subsubcategory['name'] }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <a href="{{ url($subcategory['url']) }}" class="dropdown-item">
+                                        {{ $subcategory['name'] }}
+                                    </a>
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <a href="{{ url($category['url']) }}" class="nav-item nav-link">
+                    {{ $category['name'] }}
+                </a>
+            @endif
+        @endif
+    @endforeach
+
+    <a href="{{ url('/contact') }}" class="nav-item nav-link">Contact</a>
+</div>
+
+
                         <div class="navbar-nav ml-auto py-0">
                             <a href="" class="nav-item nav-link">Login</a>
                             <a href="" class="nav-item nav-link">Register</a>
