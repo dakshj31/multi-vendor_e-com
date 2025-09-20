@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\BannerController;
+
 
    //Front Controllers
 use App\Http\Controllers\Front\IndexController;
@@ -109,6 +111,11 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
    // Brands
  Route::resource('brands', BrandController::class);
  Route::post('update-brand-status', [BrandController::class, 'updateBrandStatus']);
+
+  // Banners
+ Route::resource('banners', BannerController::class);
+ Route::post('update-banner-status', [BannerController::class, 'updateBannerStatus']);
+//  Route::get('delete-banner/{id}', [BannerController::class, 'deleteBanner']);
      
     // Admin Logout
  Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');    

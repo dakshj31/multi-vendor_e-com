@@ -192,6 +192,29 @@ $(document).ready(function(){
         });
     });
 
+    // Update Banner Status
+     $(document).on("click", ".updateBannerStatus", function() {
+        var status = $(this).find("i").data("status");
+        var banner_id = $(this).data("banner-id");
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'post',
+            url: '/admin/update-banner-status',
+            data: {status: status, banner_id: banner_id },
+            success: function(resp) {
+                var icon = (resp['status'] == 1) 
+                  ? "<i class='fas fa-toggle-on' style='color:#3f6ed3' data-status='Active'></i>"
+                  : "<i class='fas fa-toggle-off' style='color:grey' data-status='Inactive'></i>";
+                  $("a[data-banner-id='" + banner_id + "']").html(icon);
+            },
+            error: function() {
+                alert("Error");
+            }
+        });
+    });
+
     // Update Product Status
     $(document).on("click", ".updateProductStatus", function() {
         var status = $(this).find("i").data("status");
