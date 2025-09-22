@@ -77,4 +77,43 @@ class BannerService
         return ['status' => 'success' , 'message' => 'Banner deleted successfully!'];
     }
 
+    /**
+     * Add or Edit a banner
+     */
+    public function addEditBanner($request)
+    {
+        $data = $request->all();
+
+        $banner = isset($data['id']) ? Banner::find($data['id']) : new Banner(); 
+
+        $banner->type = $data['type'];
+        $banner->link = $data['link'];
+        $banner->title = $data['title'];
+        $banner->alt = $data['alt'];
+        $banner->sort = $data['sort'] ?? 0;
+        $banner->status = $data['status'] ?? 1;
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $path = 'front/images/banners/';
+            if (!File::exists(public_path($path))) {
+                File::makeDirectory(public_path($path), 0755, true);
+            }
+
+            // Delete old image if editing
+            
+                if (!empty($banner->image) && File::exists(public_path($path . $banner->image))) {
+                    File::delete(public_path($path . $banner->image));
+                }
+
+                $image = $request->file('image');
+                $imageName = time() . '-' . $image->getClientOriginalName();
+                $image->move(public_path($path), $imageName);
+                $banner->image = $imageName;
+        }
+
+        $banner->save();
+        return isset($data['id']) ? 'Banner updated successfully!' : 'Banner added successfully!';
+    }
+
 }

@@ -55,15 +55,18 @@ class BannerController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Add Banner';
+        $banner = new Banner();
+        return view('admin.banners.add_edit_banner', compact('title','banner'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BannerRequest $request)
     {
-        //
+        $message = $this->bannerService->addEditBanner($request);
+        return redirect()->route('banners.index')->with('success_message', $message);
     }
 
     /**
@@ -79,15 +82,19 @@ class BannerController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = 'Edit Banner';
+        $banner = Banner::findOrFail($id);
+        return view('admin.banners.add_edit_banner', compact('title', 'banner'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BannerRequest $request, string $id)
     {
-        //
+        $request->merge(['id' => $id]);
+        $message = $this->bannerService->addEditBanner($request);
+        return redirect()->route('banners.index')->with('success_message', $message);
     }
 
     /**

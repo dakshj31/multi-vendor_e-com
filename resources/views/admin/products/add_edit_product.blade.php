@@ -15,7 +15,6 @@
 </ol>
 </div>
 </div>
-<!--end::Row-->
 </div>
 <!--end::Container-->
 </div>
