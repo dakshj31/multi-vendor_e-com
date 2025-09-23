@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('image');
             $table->string('type');
-            $table->string('link');
+            $table->string('link')->nullable();
             $table->string('title');
-            $table->string('alt');
+            $table->string('alt')->nullable();
             $table->integer('sort');
             $table->tinyInteger('status');
             $table->timestamps();
