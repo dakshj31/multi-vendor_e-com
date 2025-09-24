@@ -86,6 +86,7 @@ class ProductService
     $product->product_gst = $data['product_gst'] ?? 0;
     $product->product_discount = $data['product_discount'] ?? 0;
     $product->is_featured = $data['is_featured'] ?? 'No';
+    $product->sort = $data['sort'] ?? 0;
 
     // Calculate discount & final price
     if (!empty($data['product_discount']) && $data['product_discount'] > 0) {

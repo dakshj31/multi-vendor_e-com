@@ -150,6 +150,11 @@
           <input type="number" class="form-control" step="0.01" id="product_discount" name="product_discount" value="{{old('product_discount', $product->product_discount ?? '')}}" placeholder="Enter Product Discount">
         </div>
 
+        {{-- <div class="mb-3">
+          <label for="final_price" class="form-label">Final Price*</label>
+          <input type="number" class="form-control" step="0.01" id="final_price" name="final_price" value="{{old('final_price', $product->final_price ?? '')}}" placeholder="Enter Product Final Price">
+        </div> --}}
+
         <div class="mb-3">
           <label for="product_gst" class="form-label">Product GST (%)</label>
           <input type="number" class="form-control" step="0.01" id="product_gst" name="product_gst" value="{{old('product_gst', $product->product_gst ?? '')}}" placeholder="Enter Product GST">
@@ -322,6 +327,11 @@
         <div class="mb-3">
           <label for="meta_keywords" class="form-label">Meta Keywords</label>
           <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{old('meta_keywords', $product->meta_keywords ?? '')}}">
+        </div>
+
+        <div class="mb-3">
+          <label for="sort" class="form-label">Sort</label>
+          <input type="number" class="form-control" id="sort" name="sort" value="{{old('sort', $product->sort ?? '')}}">
         </div>
 
         <div class="mb-3">
