@@ -66,6 +66,7 @@
             <option value="">Select Type</option>
             <option value="Slider" {{old('type', $banner->type ?? '') == 'Slider' ? 'selected' : ''}}>Slider</option>
             <option value="Fix" {{old('type', $banner->type ?? '') == 'Fix' ? 'selected' : '' }}>Fix</option>
+            <option value="Logo" {{old('type', $banner->type ?? '') == 'Logo' ? 'selected' : '' }}>Logo</option>
         </select>
     </div>
 

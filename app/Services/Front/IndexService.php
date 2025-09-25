@@ -4,6 +4,7 @@ namespace App\Services\Front;
 
 use App\Models\Banner;
 use App\Models\Product;
+use App\Models\Category;
 
 class IndexService
 {
@@ -21,7 +22,13 @@ class IndexService
         ->get()
         ->toArray();
 
-        return compact('homeSliderBanners', 'homeFixBanners');
+        $logoBanners = Banner::where('type', 'Logo')
+        ->where('status', 1)
+        ->orderBy('sort', 'Desc')
+        ->get()
+        ->toArray();
+
+        return compact('homeSliderBanners', 'homeFixBanners', 'logoBanners');
     }
 
     public function featuredProducts()
@@ -51,5 +58,42 @@ class IndexService
         ->toArray();
 
         return compact('newArrivalProducts');
+    }
+
+    public function homeCategories()
+    {
+        $categories = Category::select('id', 'name', 'image', 'url')
+        ->whereNull('parent_id') // only fetch top-level (parent) categories
+        ->where('status', 1)  // only active categories
+        ->where('menu_status', 1)  // only categories marked to show on menu/homepage
+        ->get()
+        ->map(function ($category) {
+            $allCategoryIds = $this->getAllCategoryIds($category->id); // Get this Category + its subcategory IDs
+            $productCount = Product::whereIn('category_id', $allCategoryIds)
+            ->where('status', 1)
+            ->where('stock', '>', 0)
+            ->count(); // Count active + in-stock products across all levels
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'image' => $category->image,
+                'url' => $category->url,
+                'product_count' => $productCount // Attach product count in each category
+            ];
+        });
+        return ['categories' => $categories->toArray()];
+
+    }
+
+    private function getAllCategoryIds($parentId)
+    {
+        $categoryIds = [$parentId]; //Start with the current parent category
+        $childIds = Category::where('parent_id', $parentId)
+        ->where('status', 1)
+        ->pluck('id'); // Get child category IDs
+        foreach ($childIds as $childId) {
+            $categoryIds = array_merge($categoryIds, $this->getAllCategoryIds($childId)); // recursive to get sub-subcategories
+        }
+        return $categoryIds; //return all chhild + sub-child category IDs
     }
 }

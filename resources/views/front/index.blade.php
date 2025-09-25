@@ -58,68 +58,34 @@
     </div>
     <!-- Featured End -->
 
-    <!-- Categories Start -->
+    @if (count($categories)>0)
+       <!-- Categories Start -->
     <div class="container-fluid pt-2">
         <div class="row px-xl-5 pb-3">
-            <div class="col-lg-4 col-md-6 pb-1">
+            @foreach ($categories as $category)
+                @php
+                    $image = !empty($category['image'])
+                    ? asset('front/images/categories/' . $category['image'])
+                    : asset('front/images/no-image.jpg');
+                @endphp
+                <div class="col-lg-4 col-md-6 pb-1">
                 <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">30 Products</p>
+                    <p class="text-right">{{$category['product_count']}} Products</p>
                     <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="{{asset('front/images/sitemakers1.png') }}" alt="">
+                        <img class="img-fluid" src="{{ $image }}" alt="{{$category['name']}}">
                     </a>
-                    <h5 class="font-weight-semi-bold m-0">Men</h5>
+                    <h5 class="font-weight-semi-bold m-0">{{$category['name']}}</h5>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="{{asset('front/images/sitemakers1.png') }}" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Women</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">10 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="{{asset('front/images/sitemakers1.png') }}" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Kids</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">20 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="{{asset('front/images/sitemakers1.png') }}" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Electronics</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="{{asset('front/images/sitemakers1.png') }}" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Appliances</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="{{asset('front/images/sitemakers1.png') }}" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Accessories</h5>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
-    <!-- Categories End -->
+    <!-- Categories End --> 
+    @endif
+    
 
-    <!-- Offer Start -->
+    @if (count($homeFixBanners)>0)
+        <!-- Offer Start -->
     <div class="container-fluid offer pt-2">
         <div class="row px-xl-5">
             @foreach ($homeFixBanners as $fixBanner)
@@ -137,7 +103,9 @@
         </div>
     </div>
     <!-- Offer End -->
-
+    @endif
+    
+@if (count($featuredProducts)>0)
     <!-- Products Start -->
     <div class="container-fluid pt-3">
         <div class="text-center mb-4">
@@ -178,6 +146,8 @@
         </div>
     </div>
     <!-- Products End -->
+@endif
+    
 
     <!-- Subscribe Start -->
     <div class="container-fluid bg-secondary my-2">
@@ -200,7 +170,8 @@
     </div>
     <!-- Subscribe End -->
 
-    <!-- Products Start -->
+    @if (count($newArrivalProducts)>0)
+        <!-- Products Start -->
     <div class="container-fluid pt-4">
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">New Arrivals</span></h2>
@@ -237,45 +208,28 @@
                 </div>
             </div>
             @endforeach
-            
-            
         </div>
     </div>
     <!-- Products End -->
+    @endif
+    
 
-    <!-- Vendor Start -->
+    @if (count($logoBanners)>0)
+        <!-- Vendor Start -->
     <div class="container-fluid py-2">
         <div class="row px-xl-5">
             <div class="col">
                 <div class="owl-carousel vendor-carousel">
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers_logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers-logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers_logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers-logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers_logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers-logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="i{{asset('front/images/stackdevelopers_logo.png') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{asset('front/images/stackdevelopers-logo.png') }}" alt="">
-                    </div>
+                    @foreach ($logoBanners as $logo)
+                        <div class="vendor-item border p-4">
+                            <img src="{{asset('front/images/banners/'.$logo['image'])}}" alt="{{$logo['title'] ?? 'Logo' }}">
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
     <!-- Vendor End -->
-
+    @endif
+    
     @endsection
