@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\BannerController;
 
    //Front Controllers
 use App\Http\Controllers\Front\IndexController;
+use App\Http\Controllers\Front\ProductController as ProductFrontController;
+use App\Models\Category;
 
 
 
@@ -126,5 +128,10 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
 
 Route::namespace('App\Http\Controllers\Front')->group(function () {
    Route::get('/', [IndexController::class, 'index']);
+
+   $catUrls = Category::where('status', 1)->pluck('url')->toArray();
+   foreach ($catUrls as $url) {
+      Route::get("/$url", [ProductFrontController::class, 'index']);
+   }
  });  
 

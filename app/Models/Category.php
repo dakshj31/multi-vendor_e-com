@@ -29,4 +29,21 @@ class Category extends Model
         }    
         return $getCategories->get()->toArray();
     }
+
+    public static function categoryDetails($url)
+    {
+        $category = self::with('subcategories:id,parent_id,name')
+        ->where('url',$url)
+        ->where('status',1)
+        ->first();
+        if (!$category) return null;
+        $catIds = [$category->id];
+        foreach ($category->subcategories as $subcat) {
+            $catIds[] = $subcat->id;
+        }
+        return[
+            'catIds' => $catIds,
+            'categoryDetails' => $category,
+        ];
+    }
 }
