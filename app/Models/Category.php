@@ -40,10 +40,37 @@ class Category extends Model
         $catIds = [$category->id];
         foreach ($category->subcategories as $subcat) {
             $catIds[] = $subcat->id;
+
+            foreach ($subcat->subcategories as $subsubcat) {
+                $catIds[] = $subsubcat->id;
+            }
         }
+
+        $breadcrumbs = '<div class="px-2 py-1 mb-1" style="background-color: #f9f9f9">';
+        $breadcrumbs .= '<nav aria-label="breadcrumb">';
+        $breadcrumbs .= '<ol class="breadcrumb mb-0" style="background-color: #f9f9f9; --bs-breadcrumb-divider: \'>\';">';
+        $breadcrumbs .= '<li class="breadcrumb-item"><a href="' .url('/') .'" class="text-dark text-decoration-none">Home</a></li>';
+
+        if ($category->parent_id == 0) {
+            $breadcrumbs .= '<li class="breadcrumb-item active" aria-current="page"><strong>' . $category->name . '</strong></li>';
+        } else {
+            $parentCategory = self::select('name', 'url')
+            ->where('id', $category->parent_id)
+            ->first();
+
+            if ($parentCategory) {
+                $breadcrumbs .= '<li class="breadcrumb-item"><a href="' . url($parentCategory->url) . '" class="text-dark text-decoration-none">' . $parentCategory->name .'</a></li>';
+            }
+            $breadcrumbs .= '<li class="breadcrumb-item active" aria-current="page"><strong>' . $category->name . '</strong></li>';
+        }
+        $breadcrumbs .= '</ol>';
+        $breadcrumbs .= '</nav>';
+        $breadcrumbs .= '</div>';
+
         return[
             'catIds' => $catIds,
             'categoryDetails' => $category,
+            'breadcrumbs' => $breadcrumbs,
         ];
     }
 }

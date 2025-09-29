@@ -7,6 +7,16 @@
             <div class="col-lg-9 col-md-12">
                 <div class="row pb-3">
                     <div class="col-12 pb-1">
+                        <div class="mb-3">
+                            {!! $breadcrumbs ?? '' !!}
+                            <div class="small text-muted">
+                                (FOUND {{count($categoryProducts) }} RESULTS)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-3">
+                    <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <form action="">
                                 <div class="input-group">
@@ -70,8 +80,9 @@
                     </div>
 
                     @endforeach
+
                     <div class="col-12 pb-1">
-                        <nav aria-label="Page navigation">
+                        {{-- <nav aria-label="Page navigation">
                           <ul class="pagination justify-content-center mb-3">
                             <li class="page-item disabled">
                               <a class="page-link" href="#" aria-label="Previous">
@@ -89,7 +100,8 @@
                               </a>
                             </li>
                           </ul>
-                        </nav>
+                        </nav> --}}
+                        {{$categoryProducts->links('pagination::bootstrap-4')}}
                     </div>
                 </div>
             </div>
