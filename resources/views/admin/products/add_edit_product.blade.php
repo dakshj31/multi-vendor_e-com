@@ -330,7 +330,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="sort" class="form-label">Sort</label>
+          <label for="sort" class="form-label">Sort*</label>
           <input type="number" class="form-control" id="sort" name="sort" value="{{old('sort', $product->sort ?? '')}}">
         </div>
 

@@ -28,19 +28,18 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="dropdown ml-4">
-                                <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                            Sort by
-                                        </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
-                                    <a class="dropdown-item" href="#">Latest</a>
-                                    <a class="dropdown-item" href="#">Lowest Price</a>
-                                    <a class="dropdown-item" href="#">Highest Price</a>
-                                    <a class="dropdown-item" href="#">Best Selling</a>
-                                    <a class="dropdown-item" href="#">Featured</a>
+                            <form method="GET" id="sortForm">
+                                <div class="dropdown ml-4">
+                                    <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">Sort By</button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <button class="dropdown-item" type="submit" name="sort" value="latest" {{$selectedSort == 'latest' ? 'disabled' : ' '}}>Latest</button>
+                                        <button class="dropdown-item" type="submit" name="sort" value="low_to_high" {{$selectedSort == 'low_to_high' ? 'disabled' : ' '}}>Lowest Price</button>
+                                        <button class="dropdown-item" type="submit" name="sort" value="high_to_low" {{$selectedSort == 'high_to_low' ? 'disabled' : ' '}}>Highest Price</button>
+                                        <button class="dropdown-item" type="submit" name="sort" value="best_selling" {{$selectedSort == 'best_selling' ? 'disabled' : ' '}}>Best Selling</button>
+                                        <button class="dropdown-item" type="submit" name="sort" value="featured" {{$selectedSort == 'featured' ? 'disabled' : ' '}}>Featured</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     @foreach ($categoryProducts as $product)
@@ -82,25 +81,6 @@
                     @endforeach
 
                     <div class="col-12 pb-1">
-                        {{-- <nav aria-label="Page navigation">
-                          <ul class="pagination justify-content-center mb-3">
-                            <li class="page-item disabled">
-                              <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                              <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </nav> --}}
                         {{$categoryProducts->links('pagination::bootstrap-4')}}
                     </div>
                 </div>

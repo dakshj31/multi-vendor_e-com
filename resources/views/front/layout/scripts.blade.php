@@ -14,3 +14,5 @@
     <!-- Template Javascript -->
     <script src="{{ asset('front/js/main.js') }}"></script>
     
+    {{-- Custom Script --}}
+    <script src="{{ asset('front/js/custom.js') }}"></script>
