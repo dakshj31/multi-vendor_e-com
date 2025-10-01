@@ -29,6 +29,13 @@ class ProductController extends Controller
          }
 
           $data = $this->productService->getCategoryListingData($url);
+
+          // If it's an Ajax (filters.js adds &json=), return JSON with rended view
+          if (request()->has('json')) {
+                $view = view('front.products.ajax_products_listing', $data)->render();
+                return response()->json(['view' => $view]);
+          }
+
           return view('front.products.index', $data);
     }
 

@@ -4,6 +4,7 @@ namespace App\Services\Front;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\View;
 
 class ProductService
 {
@@ -14,14 +15,18 @@ class ProductService
         $query = Product::with(['product_images'])
         ->whereIn('category_id', $categoryInfo['catIds'])
         ->where('status', 1);
+        
+        // Apply filters (sort)
         $query = $this->applyFilters($query);
-        $products = $query->paginate(12)->withQueryString();
+        
+        $products = $query->paginate(3)->withQueryString();
 
         return [
             'categoryDetails' => $categoryInfo['categoryDetails'],
             'breadcrumbs' => $categoryInfo['breadcrumbs'],
             'categoryProducts' => $products,
             'selectedSort' => request()->get('sort', 'latest'),
+            'url' => $url
         ];
     }
 
@@ -29,21 +34,24 @@ class ProductService
     {
         $sort = request()->get('sort');
         switch ($sort) {
-            case 'latest':
+            case 'product_latest':
                 $query->orderBy('created_at', 'desc');
                 break;
-            case 'low_to_high':
+            case 'lowest_price':
                 $query->orderBy('final_price', 'asc');
                 break;
-            case 'high_to_low':
+            case 'highest_price':
                 $query->orderBy('final_price', 'desc');
                 break;
             case 'best_selling':
                 $query->inRandomOrder();
                 break;
-            case 'featured':
+            case 'featured_items':
                 $query->where('is_featured', 'Yes')->orderBy('created_at', 'desc');
                 break;
+            case 'discounted_items':
+                $query->where('product_discount', '>', 0);
+                break;    
             default:
                 $query->orderBy('created_at', 'desc');          
         }

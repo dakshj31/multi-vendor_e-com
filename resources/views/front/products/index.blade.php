@@ -17,7 +17,7 @@
 
     <!-- Shop Start -->
     <div class="container-fluid pt-5">
-        <div class="row px-xl-5">
+        <div class="row px-xl-5" id="appendProducts">
             @include('front.products.ajax_products_listing')
         </div>
     </div>
