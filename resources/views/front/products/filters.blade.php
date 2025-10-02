@@ -1,3 +1,4 @@
+<?php use App\Models\ProductsFilter; ?>
 <div class="col-lg-3 col-md-12">
                 <!-- Price Start -->
                 <div class="border-bottom mb-4 pb-4">
@@ -30,28 +31,21 @@
                 <!-- Color Start -->
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">Filter by Color</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="color-1">
-                            <label class="custom-control-label" for="color-1">Black</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-2">
-                            <label class="custom-control-label" for="color-2">White</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-3">
-                            <label class="custom-control-label" for="color-3">Red</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-4">
-                            <label class="custom-control-label" for="color-4">Blue</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="color-5">
-                            <label class="custom-control-label" for="color-5">Green</label>
-                        </div>
-                    </form>
+                    @php
+                        $getColors = ProductsFilter::getColors($catIds);
+                        $selectedColors = [];
+                        if (request()->has('color')) {
+                            $selectedColors = explode('~', request()->get('color'));
+                        }
+                    @endphp
+                    <div>
+                        @foreach ($getColors as $key => $color)
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
+                                <input type="checkbox" name="color" id="color{{ $key }}" value="{{$color}}" class="custom-control-input filterAjax" {{in_array($color, $selectedColors) ? 'checked' : ''}}>
+                                <label for="color{{$key}}" class="custom-control-label">{{ucfirst($color)}}</label>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
                 <!-- Color End -->
 

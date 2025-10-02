@@ -26,12 +26,14 @@ class ProductService
             'breadcrumbs' => $categoryInfo['breadcrumbs'],
             'categoryProducts' => $products,
             'selectedSort' => request()->get('sort', 'latest'),
-            'url' => $url
+            'url' => $url,
+            'catIds' => $categoryInfo['catIds']
         ];
     }
 
     private function applyFilters($query)
     {
+        // Apply Sorting Filter
         $sort = request()->get('sort');
         switch ($sort) {
             case 'product_latest':
@@ -54,6 +56,14 @@ class ProductService
                 break;    
             default:
                 $query->orderBy('created_at', 'desc');          
+        }
+
+        // Apply Color Filter
+        if(request()->has('color') && !empty(request()->get('color'))) {
+            $colors = array_filter(explode('~',request()->get('color')));
+            if(count($colors) > 0){
+                $query->whereIn('family_color', $colors);
+            }
         }
         return $query;
     }
