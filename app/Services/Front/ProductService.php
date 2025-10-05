@@ -4,6 +4,7 @@ namespace App\Services\Front;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductsAttribute;
 use Illuminate\Support\Facades\View;
 
 class ProductService
@@ -63,6 +64,18 @@ class ProductService
             $colors = array_filter(explode('~',request()->get('color')));
             if(count($colors) > 0){
                 $query->whereIn('family_color', $colors);
+            }
+        }
+
+        // Apply Size Filter
+        if (request()->has('size') && !empty(request()->get('size'))) {
+            $sizes = explode('~', request()->get('size'));
+            $getProductsIds = ProductsAttribute::select('product_id')
+            ->whereIn('size', $sizes)
+            ->pluck('product_id')
+            ->toArray();
+            if(!empty($getProductsIds)) {
+                $query->whereIn('id', $getProductsIds);
             }
         }
         return $query;
