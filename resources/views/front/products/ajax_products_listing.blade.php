@@ -81,11 +81,9 @@
                     @endforeach
 
                    <div class="col-12 pb-1">
-                    @if (request()->has('sort'))
-                        {{ $categoryProducts->appends(['sort' => request()->get('sort')])->links('pagination::bootstrap-4')}}
-                        @else
-                        {{$categoryProducts->links('pagination::bootstrap-4')}}
-                    @endif
+                    
+                        {{ $categoryProducts->appends(['sort' => request()->get('sort'), 'color' => request()->get('color'), 'size' => request()->get('size'), 'brand' => request()->get('brand')])->links('pagination::bootstrap-4')}}
+                    
                    </div>
                 </div>
             </div>

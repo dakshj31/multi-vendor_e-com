@@ -57,7 +57,7 @@
                         $selectedSizes = request()->has('size') ? explode('~', request()->get('size')) : [];
                     @endphp
                     <div>
-                                    @foreach ($getSizes as $key => $size)
+                        @foreach ($getSizes as $key => $size)
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
                         <input type="checkbox" name="size" id="size{{$key}}" value="{{$size}}" class="custom-control-input filterAjax"
                         {{ in_array($size, $selectedSizes) ? 'checked' : ''}}>
@@ -66,6 +66,27 @@
                 @endforeach
                 </div>
                 </div>
-
                 <!-- Size End -->
+
+                <!-- Brand Filter Start -->
+                <div class="border-bottom mb-4 pb-4">
+                    <h5 class="font-weight-semi-bold mb-4">Filter by Brand</h5>
+                    @php
+                        $getBrands = ProductsFilter::getBrands($catIds);
+                        $selectedBrands = [];
+                        if (request()->has('brand')) {
+                            $selectedBrands = explode('~', request()->get('brand'));
+                        }
+                    @endphp
+                    <div>
+                        @foreach ($getBrands as $key => $brand)
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
+                        <input type="checkbox" name="brand" id="brand{{$key}}" value="{{$brand['name']}}" class="custom-control-input filterAjax"
+                        {{ in_array($brand['name'], $selectedBrands) ? 'checked' : ''}}>
+                        <label for="brand{{$key}}" class="custom-control-label">{{ strtoupper($brand['name'])}}</label>
+                    </div>
+                @endforeach
+                </div>
+                </div>
+                <!-- Brand Filter End -->
             </div>

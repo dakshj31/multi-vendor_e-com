@@ -5,6 +5,7 @@ namespace App\Services\Front;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductsAttribute;
+use App\Models\Brand;
 use Illuminate\Support\Facades\View;
 
 class ProductService
@@ -78,6 +79,17 @@ class ProductService
                 $query->whereIn('id', $getProductsIds);
             }
         }
+
+        // Apply Brand Filter
+        if (request()->has('brand') && !empty(request()->get('brand'))) {
+            $brands = explode('~', request()->get('brand'));
+            $getBrandIds = Brand::select('id')
+            ->whereIn('name', $brands)
+            ->pluck('id')
+            ->toArray(); 
+            $query->whereIn('brand_id', $getBrandIds);
+        }
+
         return $query;
     }
 }
