@@ -90,6 +90,17 @@ class ProductService
             $query->whereIn('brand_id', $getBrandIds);
         }
 
+        // Apply Price Filter
+        if (request()->has('price') && !empty(request()->get('price'))) {
+            $priceInput = str_replace("~","-", request()->get('price'));
+            $prices = explode('-', $priceInput);
+            $count = count($prices);
+            if($count >= 2){
+                $query->whereBetween('final_price', [(int)$prices[0], (int)$prices[$count-1]]);
+            }
+            
+        }
+
         return $query;
     }
 }

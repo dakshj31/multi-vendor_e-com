@@ -3,28 +3,21 @@
                 <!-- Price Start -->
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">Filter by Price</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-1">
-                            <label class="custom-control-label" for="price-1">₹0 - ₹500</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">₹501 - ₹1000</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">₹1001 - ₹2000</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">₹2001 - ₹5000</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5">₹5001 - ₹10000</label>
-                        </div>
-                    </form>
+                    @php
+                        $prices = ['0-1000', '1000-2000', '2000-5000', '5000-10000', '10000-100000'];
+                        $selectedPrices = [];
+                        if (request()->has('prices')) {
+                            $selectedPrices = explode('~', request()->get('price'));
+                        }
+                    @endphp
+                    <div>
+                        @foreach ($prices as $key => $price)
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
+                                <input type="checkbox" name="price" id="price{{ $key }}" value="{{$price}}" class="custom-control-input filterAjax" {{in_array($color, $selectedColors) ? 'checked' : ''}}>
+                                <label for="price{{$key}}" class="custom-control-label">{{ucfirst($price)}}</label>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
                 <!-- Price End -->
                 

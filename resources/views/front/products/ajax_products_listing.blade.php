@@ -81,9 +81,16 @@
                     @endforeach
 
                    <div class="col-12 pb-1">
-                    
-                        {{ $categoryProducts->appends(['sort' => request()->get('sort'), 'color' => request()->get('color'), 'size' => request()->get('size'), 'brand' => request()->get('brand')])->links('pagination::bootstrap-4')}}
-                    
+                    @php
+                        if(!isset($_GET['price'])) { $_GET['price'] = ""; }
+                    @endphp        
+                    {{ $categoryProducts->appends([
+                        'sort' => $_GET['sort'] ?? '',
+                        'color' => $_GET['color'] ?? '',
+                        'size' => $_GET['size'] ?? '',
+                        'brand' => $_GET['brand'] ?? '',
+                        'price' => $_GET['price'] ?? '',
+                    ])->links('pagination::bootstrap-4') }}
                    </div>
                 </div>
             </div>
