@@ -6,14 +6,14 @@
                     @php
                         $prices = ['0-1000', '1000-2000', '2000-5000', '5000-10000', '10000-100000'];
                         $selectedPrices = [];
-                        if (request()->has('prices')) {
+                        if (request()->has('price')) {
                             $selectedPrices = explode('~', request()->get('price'));
                         }
                     @endphp
                     <div>
                         @foreach ($prices as $key => $price)
                             <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
-                                <input type="checkbox" name="price" id="price{{ $key }}" value="{{$price}}" class="custom-control-input filterAjax" {{in_array($color, $selectedColors) ? 'checked' : ''}}>
+                                <input type="checkbox" name="price" id="price{{ $key }}" value="{{$price}}" class="custom-control-input filterAjax" {{in_array($price, $selectedPrices) ? 'checked' : ''}}>
                                 <label for="price{{$key}}" class="custom-control-label">{{ucfirst($price)}}</label>
                             </div>
                         @endforeach
@@ -82,4 +82,37 @@
                 </div>
                 </div>
                 <!-- Brand Filter End -->
+
+                <!-- Dynamic Filter -->
+                @foreach ($filters as $filter)
+                @php
+                    $filterValues = $filter->values()
+                    ->whereHas('products', function($q) use ($catIds) {
+                        $q->whereIn('category_id', $catIds);
+                    })
+                    ->pluck('value')
+                    ->unique()
+                    ->toArray();
+                
+                if (empty($filterValues)) continue;
+                $selectedValues = request()->has($filter->filter_name)
+                ? explode('~', request()->get($filter->filter_name))
+                : [];    
+                @endphp
+                <div class="border-bottom mb-4 pb-4">
+                    <h5 class="font-weight-semi-bold mb-4">Filter by {{ ucwords($filter->filter_name)}}</h5>
+                    <div>
+                        @foreach ($filterValues as $key => $value)
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
+                        <input type="checkbox" name="{{ $filter->filter_name}}" id="{{ $filter->filter_name}}{{$key}}" value="{{$value}}" class="custom-control-input filterAjax"
+                        {{ in_array($value, $selectedValues) ? 'checked' : ''}}>
+                        <label for="{{ $filter->filter_name}}{{$key}}" class="custom-control-label">{{ ucfirst($value)}}</label>
+                    </div>
+                        @endforeach
+                    </div>
+                </div>
+                    
+                @endforeach
+
+
             </div>

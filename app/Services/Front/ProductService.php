@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductsAttribute;
 use App\Models\Brand;
+use App\Models\Filter;
 use Illuminate\Support\Facades\View;
 
 class ProductService
@@ -23,13 +24,19 @@ class ProductService
         
         $products = $query->paginate(3)->withQueryString();
 
+        // Fetch filters with values
+        $filters = Filter::with(['values' => function($q){
+            $q->where('status', 1)->orderBy('sort', 'asc');    
+        }])->where('status', 1)->orderBy('sort', 'asc')->get();
+
         return [
             'categoryDetails' => $categoryInfo['categoryDetails'],
             'breadcrumbs' => $categoryInfo['breadcrumbs'],
             'categoryProducts' => $products,
             'selectedSort' => request()->get('sort', 'latest'),
             'url' => $url,
-            'catIds' => $categoryInfo['catIds']
+            'catIds' => $categoryInfo['catIds'],
+            'filters' => $filters,
         ];
     }
 
@@ -99,6 +106,26 @@ class ProductService
                 $query->whereBetween('final_price', [(int)$prices[0], (int)$prices[$count-1]]);
             }
             
+        }
+
+        // Apply Dynamic Admin Filters (Fabric,Sleeve, etc.)
+        $filterParams = request()->all();
+
+        foreach ($filterParams as $filterKey => $filterValues) {
+            // Skip known default filters(color, size, brand, price, sort, page, json)
+            if (in_array($filterKey, ['color', 'size', 'brand', 'price', 'sort', 'page', 'json']))
+            {
+                continue;
+            }
+
+            // Filter values can be "~" seprated
+            $selectedValues = explode('~', $filterValues);
+
+            if (!empty($selectedValues)) {
+                $query->whereHas('filterValues', function($q) use ($selectedValues) {
+                    $q->whereIn('value', $selectedValues);
+                });
+            }
         }
 
         return $query;
