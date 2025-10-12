@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('filters', function (Blueprint $table) {
+        Schema::create('category_filter', function (Blueprint $table) {
             $table->id();
-            $table->string('filter_name');
-            $table->string('filter_column')->nullable();
-            $table->integer('sort')->default(0);
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('filter_id')->constarined('filters')->onDelete('cascade');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('filters');
+        Schema::dropIfExists('category_filter');
     }
 };
