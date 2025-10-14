@@ -11,7 +11,7 @@ class FilterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,27 @@ class FilterRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        $filterId = $this->route('filter');
+
         return [
-            //
+            'filter_name' => 'required|max:100|unique:filters,filter_name,' .$filterId,
+            'filter_column' => 'required|string|max:100|unique:filters,filter_column,'. $filterId,
+            'category_ids' => 'required|array|min:1',
+            'category_ids.*' => 'exists:categories,id',
+            'sort' => 'nullable|integer|min:0',
+            'status' => 'nullable|in:0,1',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'filter_name.required' => 'Filter Name is required',
+            'filter_name.unique' => 'This filter already exists',
+            'filter_column.required' => 'Filter Column is required',
+            'filter_column.unique' => 'This filter coulmn already exists',
+            'category_ids.required' => 'Please select at least one category',
         ];
     }
 }
