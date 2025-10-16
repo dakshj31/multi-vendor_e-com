@@ -10,7 +10,8 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BannerController;
-
+use App\Http\Controllers\Admin\FilterController;
+use App\Http\Controller\Admin\FilterValueController;
 
    //Front Controllers
 use App\Http\Controllers\Front\IndexController;
@@ -102,6 +103,16 @@ Route::resource('dashboard', AdminController::class)->only(['index']);
  Route::post('/products/delete-dropzone-image', [ProductController::class, 'deleteDropzoneImage'])->name('admin.products.delete-image');
  Route::post('/products/delete-temp-image',[ProductController::class, 'deleteTempProductImage'])->name('product.delete.temp.altimage');
  Route::post('/products/delete-temp-video',[ProductController::class, 'deleteTempProductVideo'])->name('product.delete.temp.video');
+
+   // Filters CRUD + status update
+ Route::resource('filters', FilterController::class);
+ Route::post('update-filter-status', [FilterController::class,'updateFIlterStatus'])->name('filters.updateStatus');
+   //  Filter Values CRUD (nested inside filters)
+   //  We map parameter name 'filter-values' => 'value' so request route('value') works
+ Route::prefix('filters/{filter}')->group(function () {
+   Route::resource('filter-values', FilterValueController::class)->parameters(['filter-values' => 'value']);
+ });  
+ 
    // Product Attributes
  Route::post('update-attribute-status', [ProductController::class, 'updateAttributeStatus']);
  Route::delete('delete-product-attribute/{id}', [ProductController::class, 'deleteProductAttribute']);
