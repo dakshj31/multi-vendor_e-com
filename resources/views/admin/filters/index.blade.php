@@ -18,7 +18,7 @@
           </div>
         </div>
 
-       <div class="app=content">
+       <div class="app-content">
         <div class="container-fluid">
             @if (Session::has('success_message'))
                 <div class="alert alert-success alert-dismissible fade show">
@@ -51,20 +51,20 @@
                                     <td>@if ($filter->categories->count() > 0)
                                         {{$filter->categories->pluck('name')->join(',')}}
                                     @else
-                                        
+                                        -
                                     @endif
                                 </td>
                                 <td>
                                     @if ($filter->status == 1)
                                         <a href="javascript:void(0)" class="updateFilterStatus" data-filter-id="{{$filter->id}}" style="color:#3f6ed3">
-                                            <i class="fas fa-toggel-on" data-status="Active"></i></a>
+                                            <i class="fas fa-toggle-on" data-status="Active"></i></a>
                                     @else
                                         <a href="javascript:void(0)" class="updateFilterStatus" data-filter-id="{{$filter->id}}" style="color:grey">
-                                            <i class="fas fa-toggel-off" data-status="Inactive"></i></a>
+                                            <i class="fas fa-toggle-off" data-status="Inactive"></i></a>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{route('filters.edit', $filter->id)}}"><i class="fas fa-edit"></i></a>$nbsp;
+                                    <a href="{{route('filters.edit', $filter->id)}}"><i class="fas fa-edit"></i></a>&nbsp;
                                     <form action="{{route('filters.destroy', $filter->id)}}" method="POST" style="display:inline-block;">
                                         @csrf @method('DELETE')
                                         <button type="button" class="confirmDelete" data-module="filter" data-id="{{$filter->id}}" style="border:none;background:none;color:red;">

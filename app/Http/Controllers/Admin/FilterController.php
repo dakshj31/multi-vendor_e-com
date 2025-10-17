@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\FilterRequest;
-use App\Services\Admin\FilterServices;
+use App\Services\Admin\FilterService;
 use App\Models\Filter;
 use App\Models\Category;
 
@@ -23,7 +23,7 @@ class FilterController extends Controller
      */
     public function index()
     {
-        $filters = $this->filterSevice->getAll();
+        $filters = $this->filterService->getAll();
         $title = "Filters";
         return view('admin.filters.index', compact('filters','title'));
     }
@@ -44,7 +44,7 @@ class FilterController extends Controller
     public function store(FilterRequest $request)
     {
         $this->filterService->store($request->validated());
-        return redirect()->route('filters.index')->with('success_message', 'FIlter added successfully');
+        return redirect()->route('filters.index')->with('success_message', 'Filter added successfully');
     }
 
     /**
@@ -60,7 +60,7 @@ class FilterController extends Controller
      */
     public function edit($id)
     {
-        $filter = FIlter::with('categories')->findOrFail($id);
+        $filter = Filter::with('categories')->findOrFail($id);
 
         $categories = Category::with('subcategories')->where('parent_id', null)->where('status', 1)->get();
 
@@ -69,7 +69,7 @@ class FilterController extends Controller
         return view('admin.filters.add_edit_filter', [
             'title' => 'Edit Filter',
             'filter' => $filter,
-            'categories' -> $categories,
+            'categories' => $categories,
             'selectedCategories' => $selectedCategories
         ]);
     }
@@ -96,7 +96,7 @@ class FilterController extends Controller
     {
         if($request->ajax()) {
             $data = $request->all();
-            $status = $this->filterSevice->updateFilterStatus($data);
+            $status = $this->filterService->updateFilterStatus($data);
             return response()->json(['status' => $status, 'filter_id' => $data['filter_id']]);
         }
     }
