@@ -24,7 +24,12 @@
                 <div class="row">
                     <div class="col-md-12">
 
-                        <div></div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Filter Values</h3>
+                                <a style="max-width:200px; float:right;" href=""></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
