@@ -314,6 +314,26 @@
           <textarea class="form-control" name="search_keywords" id="search_keywords" placeholder="Enter Search Keywords">{{old('search_keywords', $product->search_keywords ?? '')}}</textarea>
         </div>
 
+        @php
+            $filters = App\Models\Filter::with(['values' => function($q) {
+              $q->where('status',1)->orderBy('sort','asc');
+            }])->where('status',1)->orderBy('sort','asc')->get();
+
+            $selectedValues = isset($product) ? $product->filterValues->pluck('id')->toArray() : [];
+        @endphp
+
+        @foreach ($filters as $filter)
+            <div class="mb-3">
+              <label> {{ucwords($filter->filter_name)}} </label>
+              <select name="filter_values[{{$filter->id}}]" class="form-control">
+                <option value="">-- Select {{ucwords($filter->filter_name)}} --</option>
+                @foreach ($filter->values as $value)
+                    <option value="{{$value->id}}" {{in_array($value->id, $selectedValues) ? 'selected' : ''}}>{{ucfirst($values->value)}}</option>
+                @endforeach
+              </select>
+            </div>
+        @endforeach
+
         <div class="mb-3">
           <label for="meta_title" class="form-label">Meta Title</label>
           <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{old('meta_title', $product->meta_title ?? '')}}">

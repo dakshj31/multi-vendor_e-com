@@ -84,35 +84,34 @@
                 <!-- Brand Filter End -->
 
                 <!-- Dynamic Filter -->
+                {{-- Dynamic filter start  --}}
                 @foreach ($filters as $filter)
                 @php
-                    $filterValues = $filter->values()
-                    ->whereHas('products', function($q) use ($catIds) {
-                        $q->whereIn('category_id', $catIds);
-                    })
-                    ->pluck('value')
-                    ->unique()
-                    ->toArray();
-                
-                if (empty($filterValues)) continue;
-                $selectedValues = request()->has($filter->filter_name)
-                ? explode('~', request()->get($filter->filter_name))
-                : [];    
+                        // get values already sorted by 'sort' from eager loading
+                        $filterValues = $filter->values
+                        ->where('status', 1)
+                        ->filter(function($value) use ($catIds) {
+                            // Keep only those linked to products in these categories
+                            return $value->products->whereIn('category_id', $catIds)->isNotEmpty();
+                        });
+
+                        if ($filterValue->isEmpty()) continue;
+
+                        $selectedValues = request()->has($filter->filter_name) ? explode('~', request()->get($filter->filter_name)) : [];
                 @endphp
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">Filter by {{ ucwords($filter->filter_name)}}</h5>
                     <div>
-                        @foreach ($filterValues as $key => $value)
+                        @foreach ($filterValues as $key => $valueObj)
                             <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
-                        <input type="checkbox" name="{{ $filter->filter_name}}" id="{{ $filter->filter_name}}{{$key}}" value="{{$value}}" class="custom-control-input filterAjax"
+                        <input type="checkbox" name="{{ $filter->filter_name}}" id="{{ $filter->filter_name}}{{$key}}" value="{{$valueobj->value}}" class="custom-control-input filterAjax"
                         {{ in_array($value, $selectedValues) ? 'checked' : ''}}>
-                        <label for="{{ $filter->filter_name}}{{$key}}" class="custom-control-label">{{ ucfirst($value)}}</label>
+                        <label for="{{ $filter->filter_name}}{{$key}}" class="custom-control-label">{{ ucfirst($valueObj->value)}}</label>
                     </div>
                         @endforeach
                     </div>
                 </div>
-                    
                 @endforeach
-
+   {{-- Dynamic filter end --}}
 
             </div>
