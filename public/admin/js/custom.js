@@ -239,6 +239,31 @@ $(document).ready(function(){
         });
     });
 
+
+    // Update Filter Status
+    $(document).on("click",".updateFilterStatus", function () {
+        var status = $(this).find("i").data("status");
+        var filter_id = $(this).data("filter-id");
+         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'post',
+            url: '/admin/update-filter-status',
+            data: {status: status, filter_id: filter_id },
+            success: function(resp) {
+                if (resp['status'] == 0) {
+                    $("a[data-filter-id='" + filter_id + "']").html("<i class='fas fa-toggle-off' style='color:grey' data-status='Inactive'></i>");
+                } else  {
+                    $("a[data-filter-id='" + filter_id + "']").html("<i class='fas fa-toggle-on' style='color:#3f6ed3' data-status='Active'></i>");
+                }
+            },
+            error: function() {
+                alert("Error");
+            }
+        });
+    });
+
     // Update Attribute Status
     $(document).on("click", ".updateAttributeStatus", function () {
         var status = $(this).find("i").data("status");

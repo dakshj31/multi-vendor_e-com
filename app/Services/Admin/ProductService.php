@@ -146,6 +146,16 @@ class ProductService
 
     $product->save();
 
+    //sync filter valuesfor this product
+    if(!empty($data['filter_values']) && is_array($data['filter_values'])) {
+        // data['filter_values'] = [filter_id => filter_value_id, ...]
+        // keep only selected values (non-empty)
+        $values = array_values(array_filter($data['filter_values']));
+        $product->filterValues()->sync($values);
+        } else {
+            $product->filterValues()->detach();
+        }
+
     // Alternate images
     if (!empty($data['product_images'])) {
         $imageFiles = is_array($data['product_images']) ? $data['product_images'] : explode(',', $data['product_images']);
@@ -344,7 +354,7 @@ public function updateImageSorting(array $sortedImages): void
 {
     foreach ($sortedImages as $imageData) {
         if (isset($imageData['id']) && isset($imageData['sort'])) {
-            ProductsImage::where('id', $imageData['id'])->update([
+            ProductImage::where('id', $imageData['id'])->update([
                 'sort' => $imageData['sort']
             ]);
         }

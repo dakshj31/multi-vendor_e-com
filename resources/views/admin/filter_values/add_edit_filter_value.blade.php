@@ -5,10 +5,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6"><h3 class="mb-0">{{$title}} - {{$filter->filter_name}}</h3></div>
-                    <div class="col-sm=6">
+                    <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
                             <li class="breadcrumb-item"><a href="{{route('filters.index')}}"></a></li>
-                            <li class="breadcrumb-item"><a href="{{route('filter-values.index', $filters->id)}}">Filter Values</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('filter-values.index', $filter->id)}}">Filter Values</a></li>
                             <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
                         </ol>
                     </div>
@@ -26,12 +26,12 @@
                             </div>
                             @foreach ($errors->all() as $error)
                                 <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                                    <strong>Error!</strong> {{!!$error !!}}
+                                    <strong>Error!</strong> {{$error }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endforeach
 
-                            <form action="{{isset($filterValue) ? route('filter-values.update',[$filter->id, $filterValue->id]) : route(['filter-values.store',$filter->id])}}" method="POST">
+                            <form action="{{isset($filterValue) ? route('filter-values.update',[$filter->id, $filterValue->id]) : route('filter-values.store',$filter->id)}}" method="POST">
                                 @csrf
                                 @if(isset($filterValue)) @method('PUT') @endif
 

@@ -328,7 +328,7 @@
               <select name="filter_values[{{$filter->id}}]" class="form-control">
                 <option value="">-- Select {{ucwords($filter->filter_name)}} --</option>
                 @foreach ($filter->values as $value)
-                    <option value="{{$value->id}}" {{in_array($value->id, $selectedValues) ? 'selected' : ''}}>{{ucfirst($values->value)}}</option>
+                    <option value="{{$value->id}}" {{in_array($value->id, $selectedValues) ? 'selected' : ''}}>{{ucfirst($value->value)}}</option>
                 @endforeach
               </select>
             </div>

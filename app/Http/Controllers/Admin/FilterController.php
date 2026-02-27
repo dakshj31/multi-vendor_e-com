@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\FilterRequest;
 use App\Services\Admin\FilterService;
 use App\Models\Filter;
 use App\Models\Category;
+use Session;
 
 class FilterController extends Controller
 {
@@ -23,6 +24,7 @@ class FilterController extends Controller
      */
     public function index()
     {
+         Session::put('page', 'filters');
         $filters = $this->filterService->getAll();
         $title = "Filters";
         return view('admin.filters.index', compact('filters','title'));
@@ -80,7 +82,7 @@ class FilterController extends Controller
     public function update(FilterRequest $request, $id)
     {
         $this->filterService->update($id, $request->validated());
-        return redirect()-route('filters.index')->with('success_message', 'Filter updated successfully');
+        return redirect()->route('filters.index')->with('success_message', 'Filter updated successfully');
     }
 
     /**

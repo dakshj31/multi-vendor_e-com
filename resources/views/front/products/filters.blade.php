@@ -95,7 +95,7 @@
                             return $value->products->whereIn('category_id', $catIds)->isNotEmpty();
                         });
 
-                        if ($filterValue->isEmpty()) continue;
+                        if ($filterValues->isEmpty()) continue;
 
                         $selectedValues = request()->has($filter->filter_name) ? explode('~', request()->get($filter->filter_name)) : [];
                 @endphp

@@ -25,7 +25,7 @@ class FilterValueController extends Controller
         $filter = Filter::findOrFail($filterId);
         $filterValue = $this->filterValueService->getAll($filterId);
 
-        return view('admin.filter_values.index', compact('filter', 'filterValues'));
+        return view('admin.filter_values.index', compact('filter', 'filterValue'));
     }
 
     /**

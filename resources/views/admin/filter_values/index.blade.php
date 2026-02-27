@@ -47,9 +47,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($filterValues as $value)
+                                        @foreach ($filterValue as $value)
                                             <tr>
-                                                <td>{{$value=>id}}</td>
+                                                <td>{{$value->id}}</td>
                                                 <td>{{ucfirst($value->value)}}</td>
                                                 <td>{{$value->sort}}</td>
                                                 <td>@if ($value->status == 1)

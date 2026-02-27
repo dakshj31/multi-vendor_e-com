@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\FilterController;
-use App\Http\Controller\Admin\FilterValueController;
+use App\Http\Controllers\Admin\FilterValueController;
 
    //Front Controllers
 use App\Http\Controllers\Front\IndexController;
